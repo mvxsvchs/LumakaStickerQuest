@@ -2,11 +2,13 @@ class Todo {
   String id;
   String title;
   bool done;
+  String category; // NEU
 
   Todo({
     required this.id,
     required this.title,
     this.done = false,
+    this.category = 'Allgemein',
   });
 
   factory Todo.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,7 @@ class Todo {
       id: json['id'] as String,
       title: json['title'] as String,
       done: json['done'] as bool,
+      category: (json['category'] as String?) ?? 'Allgemein',
     );
   }
 
@@ -22,6 +25,7 @@ class Todo {
       'id': id,
       'title': title,
       'done': done,
+      'category': category,
     };
   }
 }
