@@ -8,10 +8,14 @@ abstract class TodoService {
   Future<Todo> toggle(String id);
   Future<void> remove(String id);
   Future<void> reorder(int oldIndex, int newIndex);
+
+  // Neu für Swipe+Undo
+  Future<Todo?> removeAndReturn(String id);
+  Future<void> restore(Todo todo, int index);
 }
 
 class LocalTodoService implements TodoService {
-  // v3 wegen zusätzlichem Feld + Reihenfolge
+  // v3 wegen Kategorie + Reihenfolge
   static const _key = 'todos_v3';
   List<Todo> _cache = [];
 
@@ -69,6 +73,24 @@ class LocalTodoService implements TodoService {
   @override
   Future<void> remove(String id) async {
     _cache = _cache.where((t) => t.id != id).toList();
+    await _save();
+  }
+
+  // ---- Neu: für Undo ----
+  @override
+  Future<Todo?> removeAndReturn(String id) async {
+    final idx = _cache.indexWhere((t) => t.id == id);
+    if (idx == -1) return null;
+    final removed = _cache.removeAt(idx);
+    await _save();
+    return removed;
+  }
+
+  @override
+  Future<void> restore(Todo todo, int index) async {
+    if (index < 0) index = 0;
+    if (index > _cache.length) index = _cache.length;
+    _cache.insert(index, todo);
     await _save();
   }
 

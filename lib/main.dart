@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'todo.dart';
 import 'todo_service.dart';
 
-// -------- Light Palette --------
-const peachPrimary = Color(0xFFF3B5A7); // Button/AppBar Peach
-const peachAccent  = Color(0xFFFBD5C9); // sanfter Peach
-const lightBg      = Color(0xFFFFF7F3); // Off-White/Peachy
-const cardBg       = Color(0xFFFFFFFF); // Karten/Inputs
-const textMain     = Color(0xFF4A3B35); // warmes Dunkelbraun
-const textMuted    = Color(0xFF8E7D75); // sekundär
-const borderSoft   = Color(0xFFEBD9D2); // feine Rahmung
+// -------- Light Palette (ans Bild angelehnt) --------
+const peachPrimary = Color(0xFFF3B5A7);
+const peachAccent  = Color(0xFFFBD5C9);
+const lightBg      = Color(0xFFFFF7F3);
+const cardBg       = Color(0xFFFFFFFF);
+const textMain     = Color(0xFF4A3B35);
+const textMuted    = Color(0xFF8E7D75);
+const borderSoft   = Color(0xFFEBD9D2);
 
 // Kategorien
 const List<String> kCategories = [
-  'Alle', // nur Filter
+  'Alle',
   'Allgemein',
   'Arbeit',
   'Schule',
@@ -181,26 +181,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // Sichtbare Liste ermitteln (Filter)
+  // Sichtbare Liste (Filter)
   List<Todo> get _visibleTodos {
     if (selectedFilter == 'Alle') return todos;
     return todos.where((t) => t.category == selectedFilter).toList();
   }
 
-  // Drag & Drop (sichtbare Reihenfolge -> persistent)
+  // Drag & Drop (sichtbar -> persistent)
   Future<void> _reorderVisible(int oldIndex, int newIndex) async {
     final visible = _visibleTodos;
     final movedId = visible[oldIndex].id;
 
-    // Temporär sichtbare Liste in neue Reihenfolge bringen
     final tmp = List.of(visible);
     final item = tmp.removeAt(oldIndex);
     tmp.insert(newIndex > oldIndex ? newIndex - 1 : newIndex, item);
 
-    // Map: ID -> neue Position (nur sichtbare)
     final newPos = <String, int>{ for (var i = 0; i < tmp.length; i++) tmp[i].id: i };
 
-    // UI: gesamte Liste so sortieren, dass sichtbare oben in neuer Reihenfolge stehen
     setState(() {
       todos.sort((a, b) {
         final ai = newPos[a.id];
@@ -212,14 +209,47 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
 
-    // echte Indizes in der Gesamtliste und dauerhaft speichern
     final realOld = todos.indexWhere((t) => t.id == movedId);
-    final realNew = realOld; // nach Sort sitzt das Item schon, wir lesen die aktuelle Pos:
     final newIdxAfterSort = todos.indexWhere((t) => t.id == movedId);
     await svc.reorder(realOld, newIdxAfterSort);
   }
 
   int get _openCount => _visibleTodos.where((t) => !t.done).length;
+
+  // --- Swipe to delete mit Undo ---
+  Future<void> _dismissWithUndo(Todo t, int visibleIndex) async {
+    final id = t.id;
+    final realIndex = todos.indexWhere((x) => x.id == id);
+
+    // UI direkt entfernen
+    setState(() {
+      todos = todos.where((x) => x.id != id).toList();
+    });
+
+    // persistent entfernen (und Objekt merken)
+    final removed = await svc.removeAndReturn(id);
+
+    // Snackbar mit Undo
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Gelöscht: ${t.title}'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () async {
+            // UI wieder einfügen
+            setState(() {
+              todos.insert(realIndex, removed ?? t);
+            });
+            // persistent wiederherstellen
+            await svc.restore(removed ?? t, realIndex);
+          },
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Liste mit Drag & Drop
+          // Liste: Reorderable + Swipe-to-Delete
           Expanded(
             child: _visibleTodos.isEmpty
                 ? const _EmptyState()
@@ -329,30 +359,36 @@ class _HomeScreenState extends State<HomeScreen> {
               onReorder: (oldIndex, newIndex) => _reorderVisible(oldIndex, newIndex),
               itemBuilder: (context, i) {
                 final t = _visibleTodos[i];
-                return Card(
-                  key: ValueKey(t.id),
-                  child: ListTile(
-                    leading: Checkbox(
-                      value: t.done,
-                      onChanged: (_) => _toggle(t.id),
-                    ),
-                    title: Text(
-                      t.title,
-                      style: TextStyle(
-                        color: t.done ? textMuted : textMain,
-                        fontWeight: t.done ? FontWeight.w400 : FontWeight.w500,
-                        decoration: t.done ? TextDecoration.lineThrough : TextDecoration.none,
-                        decorationColor: t.done ? textMuted : null,
-                        decorationThickness: 2,
+                return Dismissible(
+                  key: ValueKey('dismiss-${t.id}'),
+                  direction: DismissDirection.endToStart,
+                  background: const _SwipeBg(),
+                  onDismissed: (_) => _dismissWithUndo(t, i),
+                  child: Card(
+                    key: ValueKey(t.id),
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: t.done,
+                        onChanged: (_) => _toggle(t.id),
                       ),
-                    ),
-                    subtitle: Text(
-                      t.category,
-                      style: const TextStyle(color: textMuted, fontSize: 12),
-                    ),
-                    trailing: ReorderableDragStartListener(
-                      index: i,
-                      child: const Icon(Icons.drag_handle),
+                      title: Text(
+                        t.title,
+                        style: TextStyle(
+                          color: t.done ? textMuted : textMain,
+                          fontWeight: t.done ? FontWeight.w400 : FontWeight.w500,
+                          decoration: t.done ? TextDecoration.lineThrough : TextDecoration.none,
+                          decorationColor: t.done ? textMuted : null,
+                          decorationThickness: 2,
+                        ),
+                      ),
+                      subtitle: Text(
+                        t.category,
+                        style: const TextStyle(color: textMuted, fontSize: 12),
+                      ),
+                      trailing: ReorderableDragStartListener(
+                        index: i,
+                        child: const Icon(Icons.drag_handle),
+                      ),
                     ),
                   ),
                 );
@@ -361,6 +397,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SwipeBg extends StatelessWidget {
+  const _SwipeBg();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFF6B6B),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Icon(Icons.delete, color: Colors.white),
     );
   }
 }
