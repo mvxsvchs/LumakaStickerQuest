@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'todo.dart';
 import 'todo_service.dart';
 
-// -------- Light Palette (ans Bild angelehnt) --------
+// -------- Light Palette --------
 const peachPrimary = Color(0xFFF3B5A7); // Button/AppBar Peach
-const peachAccent  = Color(0xFFFBD5C9); // sanfter Peach für Highlights
-const lightBg      = Color(0xFFFFF7F3); // Off-White/Peachy Hintergrund
+const peachAccent  = Color(0xFFFBD5C9); // sanfter Peach
+const lightBg      = Color(0xFFFFF7F3); // Off-White/Peachy
 const cardBg       = Color(0xFFFFFFFF); // Karten/Inputs
 const textMain     = Color(0xFF4A3B35); // warmes Dunkelbraun
-const textMuted    = Color(0xFF8E7D75); // sekundärer Text
+const textMuted    = Color(0xFF8E7D75); // sekundär
 const borderSoft   = Color(0xFFEBD9D2); // feine Rahmung
 
 // Kategorien
 const List<String> kCategories = [
-  'Alle',       // nur für Filter
+  'Alle', // nur Filter
   'Allgemein',
   'Arbeit',
   'Schule',
@@ -140,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Todo> todos = [];
   bool loading = true;
 
-  // Filter + Add-Kategorie
   String selectedFilter = 'Alle';
   String selectedAddCategory = 'Allgemein';
 
@@ -182,9 +181,42 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Sichtbare Liste ermitteln (Filter)
   List<Todo> get _visibleTodos {
     if (selectedFilter == 'Alle') return todos;
     return todos.where((t) => t.category == selectedFilter).toList();
+  }
+
+  // Drag & Drop (sichtbare Reihenfolge -> persistent)
+  Future<void> _reorderVisible(int oldIndex, int newIndex) async {
+    final visible = _visibleTodos;
+    final movedId = visible[oldIndex].id;
+
+    // Temporär sichtbare Liste in neue Reihenfolge bringen
+    final tmp = List.of(visible);
+    final item = tmp.removeAt(oldIndex);
+    tmp.insert(newIndex > oldIndex ? newIndex - 1 : newIndex, item);
+
+    // Map: ID -> neue Position (nur sichtbare)
+    final newPos = <String, int>{ for (var i = 0; i < tmp.length; i++) tmp[i].id: i };
+
+    // UI: gesamte Liste so sortieren, dass sichtbare oben in neuer Reihenfolge stehen
+    setState(() {
+      todos.sort((a, b) {
+        final ai = newPos[a.id];
+        final bi = newPos[b.id];
+        if (ai != null && bi != null) return ai.compareTo(bi);
+        if (ai != null) return -1;
+        if (bi != null) return 1;
+        return 0;
+      });
+    });
+
+    // echte Indizes in der Gesamtliste und dauerhaft speichern
+    final realOld = todos.indexWhere((t) => t.id == movedId);
+    final realNew = realOld; // nach Sort sitzt das Item schon, wir lesen die aktuelle Pos:
+    final newIdxAfterSort = todos.indexWhere((t) => t.id == movedId);
+    await svc.reorder(realOld, newIdxAfterSort);
   }
 
   int get _openCount => _visibleTodos.where((t) => !t.done).length;
@@ -217,12 +249,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          // --- Kategorie-Chips (Filter) ---
+          // Filter-Chips
           SizedBox(
             height: 54,
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               scrollDirection: Axis.horizontal,
+              itemCount: kCategories.length,
               itemBuilder: (context, i) {
                 final cat = kCategories[i];
                 final selected = selectedFilter == cat;
@@ -241,16 +274,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               separatorBuilder: (_, __) => const SizedBox(width: 8),
-              itemCount: kCategories.length,
             ),
           ),
 
-          // --- Eingabezeile + Kategorie-Auswahl ---
+          // Eingabe + Kategorie
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
             child: Row(
               children: [
-                // Kategorie Dropdown
                 Container(
                   decoration: BoxDecoration(
                     color: cardBg,
@@ -273,30 +304,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Neue Aufgabe…',
-                    ),
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textCapitalization: TextCapitalization.none,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(hintText: 'Neue Aufgabe…'),
                     onSubmitted: (_) => _add(),
                   ),
                 ),
                 const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: _add,
-                  child: const Text('Add'),
-                ),
+                FilledButton(onPressed: _add, child: const Text('Add')),
               ],
             ),
           ),
 
-          // --- Liste ---
+          // Liste mit Drag & Drop
           Expanded(
             child: _visibleTodos.isEmpty
                 ? const _EmptyState()
-                : ListView.builder(
+                : ReorderableListView.builder(
+              padding: const EdgeInsets.only(bottom: 12),
               itemCount: _visibleTodos.length,
+              buildDefaultDragHandles: false,
+              onReorder: (oldIndex, newIndex) => _reorderVisible(oldIndex, newIndex),
               itemBuilder: (context, i) {
                 final t = _visibleTodos[i];
                 return Card(
+                  key: ValueKey(t.id),
                   child: ListTile(
                     leading: Checkbox(
                       value: t.done,
@@ -305,18 +339,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: Text(
                       t.title,
                       style: TextStyle(
-                        decoration: t.done ? TextDecoration.lineThrough : null,
                         color: t.done ? textMuted : textMain,
                         fontWeight: t.done ? FontWeight.w400 : FontWeight.w500,
+                        decoration: t.done ? TextDecoration.lineThrough : TextDecoration.none,
+                        decorationColor: t.done ? textMuted : null,
+                        decorationThickness: 2,
                       ),
                     ),
                     subtitle: Text(
                       t.category,
                       style: const TextStyle(color: textMuted, fontSize: 12),
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _remove(t.id),
+                    trailing: ReorderableDragStartListener(
+                      index: i,
+                      child: const Icon(Icons.drag_handle),
                     ),
                   ),
                 );
@@ -368,9 +404,7 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 6),
             const Text(
               'Wähle oben eine Kategorie',
-              style: TextStyle(
-                color: textMuted,
-              ),
+              style: TextStyle(color: textMuted),
             ),
           ],
         ),

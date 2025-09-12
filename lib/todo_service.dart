@@ -7,10 +7,11 @@ abstract class TodoService {
   Future<Todo> create(String title, {String category = 'Allgemein'});
   Future<Todo> toggle(String id);
   Future<void> remove(String id);
+  Future<void> reorder(int oldIndex, int newIndex);
 }
 
 class LocalTodoService implements TodoService {
-  // neue Version, weil wir ein Feld ergänzt haben
+  // v3 wegen zusätzlichem Feld + Reihenfolge
   static const _key = 'todos_v3';
   List<Todo> _cache = [];
 
@@ -27,10 +28,9 @@ class LocalTodoService implements TodoService {
     try {
       final decoded = jsonDecode(raw);
       if (decoded is List) {
-        _cache = decoded.map<Todo>((e) {
-          final m = Map<String, dynamic>.from(e as Map);
-          return Todo.fromJson(m);
-        }).toList();
+        _cache = decoded
+            .map<Todo>((e) => Todo.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList();
       } else {
         _cache = [];
       }
@@ -69,6 +69,16 @@ class LocalTodoService implements TodoService {
   @override
   Future<void> remove(String id) async {
     _cache = _cache.where((t) => t.id != id).toList();
+    await _save();
+  }
+
+  @override
+  Future<void> reorder(int oldIndex, int newIndex) async {
+    if (oldIndex < 0 || oldIndex >= _cache.length) return;
+    if (newIndex > _cache.length) newIndex = _cache.length;
+    if (newIndex > oldIndex) newIndex -= 1;
+    final item = _cache.removeAt(oldIndex);
+    _cache.insert(newIndex, item);
     await _save();
   }
 }

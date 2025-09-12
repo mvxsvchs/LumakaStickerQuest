@@ -2,7 +2,7 @@ class Todo {
   String id;
   String title;
   bool done;
-  String category; // NEU
+  String category;
 
   Todo({
     required this.id,
