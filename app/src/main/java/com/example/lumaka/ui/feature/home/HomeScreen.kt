@@ -14,6 +14,7 @@ import com.example.lumaka.ui.component.NavigationButton
 import com.example.lumaka.ui.theme.*
 import com.example.lumaka.util.rememberPreviewNavController
 import com.example.lumaka.R
+import com.example.lumaka.ui.component.NavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +34,9 @@ fun HomeScreen(
                     actionIconContentColor = MaterialTheme.colorScheme.onBackground
                 ),
             )
+        },
+        bottomBar = {
+            NavigationBar(navController = navController)
         }
     ) { padding ->
         Column(
