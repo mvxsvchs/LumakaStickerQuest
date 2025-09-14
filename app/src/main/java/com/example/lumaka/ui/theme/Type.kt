@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.lumaka.R
 
-// Komplette Montserrat-FontFamily mit allen Weights
 private val Montserrat = FontFamily(
     Font(R.font.montserrat_thin, FontWeight.Thin),
     Font(R.font.montserrat_thin_italic, FontWeight.Thin, style = androidx.compose.ui.text.font.FontStyle.Italic),
@@ -38,7 +37,6 @@ private val Montserrat = FontFamily(
     Font(R.font.montserrat_black_italic, FontWeight.Black, style = androidx.compose.ui.text.font.FontStyle.Italic)
 )
 
-// Typographie cozy angepasst
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Montserrat,

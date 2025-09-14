@@ -96,8 +96,10 @@ fun LumakaTheme(
     val colors = when {
         dynamicColor -> {
             val ctx = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
+            if (darkTheme) dynamicDarkColorScheme(context = ctx)
+            else dynamicLightColorScheme(context = ctx)
         }
+
         darkTheme -> DarkColors
         else -> LightColors
     }

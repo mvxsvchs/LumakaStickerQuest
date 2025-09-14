@@ -1,5 +1,6 @@
 package com.example.lumaka.ui.feature.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -62,16 +63,16 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreviewLight() {
     val previewNavController = rememberPreviewNavController()
-    LumakaTheme(darkTheme = false, dynamicColor = false) {
+    LumakaTheme {
         HomeScreen(previewNavController)
     }
 }
 
-@Preview(name = "Home Dark", showBackground = true)
+@Preview(name = "Home Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeScreenPreviewDark() {
     val previewNavController = rememberPreviewNavController()
-    LumakaTheme(darkTheme = true, dynamicColor = false) {
+    LumakaTheme {
         HomeScreen(previewNavController)
     }
 }
