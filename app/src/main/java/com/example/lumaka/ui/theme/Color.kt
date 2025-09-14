@@ -2,18 +2,79 @@ package com.example.lumaka.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// 🌸 Peach + Lavender Palette
+// ---------- Light Theme (Cozy Pastell mit Blau Background) ----------
+val Primary = Color(0xFF80C9D6)       // Button: etwas kräftigeres Pastellblau
+val OnPrimary = Color(0xFF002022)
+val PrimaryContainer = Color(0xFFAED9E0)
+val OnPrimaryContainer = Color(0xFF002022)
 
-// Light Mode
-val Peach = Color(0xFFFFB6A5)       // peach blush
-val Lavender = Color(0xFFD8B4FE)    // pastel lavender
-val SoftPink = Color(0xFFFECACA)    // cozy soft pink
-val PeachWhite = Color(0xFFFFF5F0)  // soft peachy white
-val TextDark = Color(0xFF2B2B2B)    // cozy text color
+val Secondary = Color(0xFFE5B9D6)         // Lavender/Rosa Akzent
+val OnSecondary = Color(0xFF381E2C)
+val SecondaryContainer = Color(0xFFF7DCEC)
+val OnSecondaryContainer = Color(0xFF261320)
 
-// Dark Mode
-val DarkBg = Color(0xFF1C1B29)      // deep cozy dark
-val DarkSurface = Color(0xFF2A2938) // slightly lighter than bg
-val LavenderAccent = Color(0xFFD8B4FE)
-val PeachAccent = Color(0xFFFF9E8A)
-val TextLight = Color(0xFFF3EDF7)
+val Tertiary = Color(0xFFB4D6A0)          // Mint Pastell
+val OnTertiary = Color(0xFF0D1F0B)
+val TertiaryContainer = Color(0xFFD9F2CA)
+val OnTertiaryContainer = Color(0xFF132312)
+
+val Error = Color(0xFFD98880)             // softer Korallton
+val OnError = Color(0xFF3F0404)
+val ErrorContainer = Color(0xFFFFDAD6)
+val OnErrorContainer = Color(0xFF410002)
+
+val Background = Color(0xFFD6F3F7)        // Cozy Light Blue Background
+val OnBackground = Color(0xFF1C1B1F)
+
+val Surface = Color(0xFFEDF9FA)           // noch helleres Blau als Surface
+val OnSurface = Color(0xFF1C1B1F)
+
+val SurfaceVariant = Color(0xFFE7E0DA)    // Beige-Grau (Cards)
+val OnSurfaceVariant = Color(0xFF494541)
+
+val Outline = Color(0xFF7D766E)
+val OutlineVariant = Color(0xFFD0C5BE)
+
+val Scrim = Color(0xFF000000)
+val InverseSurface = Color(0xFF32302C)
+val InverseOnSurface = Color(0xFFF5EFEA)
+val InversePrimary = Color(0xFF80C9D6)
+
+
+// ---------- Dark Theme (Cozy Pastell) ----------
+val PrimaryDark = Color(0xFFEEB98E)       // Peach warm für Buttons
+val OnPrimaryDark = Color(0xFF3F2500)
+val PrimaryContainerDark = Color(0xFF5C3B1C)
+val OnPrimaryContainerDark = Color(0xFFFFE0C2)
+
+val SecondaryDark = Color(0xFFD6A9C3)     // Lavender dunkler
+val OnSecondaryDark = Color(0xFF2C1120)
+val SecondaryContainerDark = Color(0xFF4B2C3E)
+val OnSecondaryContainerDark = Color(0xFFF7DCEC)
+
+val TertiaryDark = Color(0xFF9ACF83)      // Mint gedämpft
+val OnTertiaryDark = Color(0xFF1B3616)
+val TertiaryContainerDark = Color(0xFF345029)
+val OnTertiaryContainerDark = Color(0xFFD9F2CA)
+
+val ErrorDark = Color(0xFFFFB4AB)
+val OnErrorDark = Color(0xFF690005)
+val ErrorContainerDark = Color(0xFF93000A)
+val OnErrorContainerDark = Color(0xFFFFDAD6)
+
+val BackgroundDark = Color(0xFF1C1B1F)    // dunkel neutral
+val OnBackgroundDark = Color(0xFFEAE6E1)
+
+val SurfaceDark = Color(0xFF2A292D)
+val OnSurfaceDark = Color(0xFFEAE6E1)
+
+val SurfaceVariantDark = Color(0xFF4A4540)
+val OnSurfaceVariantDark = Color(0xFFCFC5BE)
+
+val OutlineDark = Color(0xFF998F87)
+val OutlineVariantDark = Color(0xFF4A4540)
+
+val ScrimDark = Color(0xFF000000)
+val InverseSurfaceDark = Color(0xFFEAE6E1)
+val InverseOnSurfaceDark = Color(0xFF313033)
+val InversePrimaryDark = Color(0xFFD6F3F7) // das helle Blau als Akzent

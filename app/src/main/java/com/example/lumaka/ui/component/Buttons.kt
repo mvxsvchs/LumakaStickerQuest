@@ -15,29 +15,25 @@ import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun NavigationButton(
-    text: String = "Los geht’s",
     modifier: Modifier = Modifier,
+    text: String,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
-    val isDark = isSystemInDarkTheme()
-
-    // Light: Primary / OnPrimary (wie vorher)
-    // Dark:  Secondary / OnSecondary (besserer Kontrast)
-    val container = if (isDark) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-    val content   = if (isDark) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimary
+    val container = MaterialTheme.colorScheme.primary
+    val content = MaterialTheme.colorScheme.onPrimary
 
     Button(
-        onClick = onClick,
+        modifier = modifier,
         enabled = enabled,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = container,
             contentColor = content,
             disabledContainerColor = container.copy(alpha = 0.12f),
-            disabledContentColor = content.copy(alpha = 0.38f)
+            disabledContentColor = content.copy(alpha = 0.36f)
         ),
-        modifier = modifier
+        onClick = onClick,
     ) {
         Text(
             text = text,
@@ -50,7 +46,7 @@ fun NavigationButton(
 @Composable
 private fun NavigationButtonPreviewLight() {
     LumakaTheme(darkTheme = false, dynamicColor = false) {
-        NavigationButton(onClick = {}, modifier = Modifier.padding(16.dp))
+        NavigationButton(modifier = Modifier.padding(16.dp), text = "Button", onClick = {})
     }
 }
 
@@ -58,6 +54,6 @@ private fun NavigationButtonPreviewLight() {
 @Composable
 private fun NavigationButtonPreviewDark() {
     LumakaTheme(darkTheme = true, dynamicColor = false) {
-        NavigationButton(onClick = {}, modifier = Modifier.padding(16.dp))
+        NavigationButton(modifier = Modifier.padding(16.dp), text = "Button", onClick = {})
     }
 }

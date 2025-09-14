@@ -22,21 +22,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // Theme-State (Light/Dark)
-            var isDark by rememberSaveable { mutableStateOf(false) }
-
-            LumakaTheme(
-                darkTheme = isDark,
-                dynamicColor = false // Peach Theme erzwingen
-            ) {
+            LumakaTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation(
-                        isDark = isDark,
-                        onToggleDark = { isDark = !isDark }
-                    )
+                    AppNavigation()
                 }
             }
         }
@@ -45,16 +36,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppNavigation(
-    isDark: Boolean,
-    onToggleDark: () -> Unit
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HOME) {
         composable(route = AppScreens.HOME) {
             HomeScreen(
                 navController = navController,
-                isDark = isDark,
-                onToggleDark = onToggleDark
             )
         }
     }

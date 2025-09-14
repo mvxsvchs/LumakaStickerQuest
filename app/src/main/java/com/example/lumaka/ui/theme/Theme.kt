@@ -1,6 +1,5 @@
 package com.example.lumaka.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -10,73 +9,101 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-// 🌸 Light Cozy Pastell
-private val LightColorScheme = lightColorScheme(
-    primary = Peach,
-    onPrimary = TextDark,
-    primaryContainer = SoftPink,
-    onPrimaryContainer = TextDark,
+// ---- Light ----
+private val LightColors = lightColorScheme(
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    onPrimaryContainer = OnPrimaryContainer,
 
-    secondary = Lavender,
-    onSecondary = TextDark,
-    secondaryContainer = PeachWhite,
-    onSecondaryContainer = TextDark,
+    secondary = Secondary,
+    onSecondary = OnSecondary,
+    secondaryContainer = SecondaryContainer,
+    onSecondaryContainer = OnSecondaryContainer,
 
-    tertiary = SoftPink,
-    onTertiary = TextDark,
+    tertiary = Tertiary,
+    onTertiary = OnTertiary,
+    tertiaryContainer = TertiaryContainer,
+    onTertiaryContainer = OnTertiaryContainer,
 
-    background = PeachWhite,
-    onBackground = TextDark,
+    error = Error,
+    onError = OnError,
+    errorContainer = ErrorContainer,
+    onErrorContainer = OnErrorContainer,
 
-    surface = PeachWhite,
-    onSurface = TextDark,
+    background = Background,
+    onBackground = OnBackground,
 
-    error = SoftPink,
-    onError = TextDark
+    surface = Surface,
+    onSurface = OnSurface,
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = OnSurfaceVariant,
+
+    outline = Outline,
+    outlineVariant = OutlineVariant,
+
+    scrim = Scrim,
+    inverseSurface = InverseSurface,
+    inverseOnSurface = InverseOnSurface,
+    inversePrimary = InversePrimary
 )
 
-// 🌌 Dark Cozy Pastell
-private val DarkColorScheme = darkColorScheme(
-    primary = LavenderAccent,
-    onPrimary = TextLight,
-    primaryContainer = PeachAccent,
-    onPrimaryContainer = TextLight,
+// ---- Dark ----
+private val DarkColors = darkColorScheme(
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
 
-    secondary = Lavender,
-    onSecondary = TextLight,
-    secondaryContainer = DarkSurface,
-    onSecondaryContainer = TextLight,
+    secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = OnSecondaryContainerDark,
 
-    tertiary = PeachAccent,
-    onTertiary = TextLight,
+    tertiary = TertiaryDark,
+    onTertiary = OnTertiaryDark,
+    tertiaryContainer = TertiaryContainerDark,
+    onTertiaryContainer = OnTertiaryContainerDark,
 
-    background = DarkBg,
-    onBackground = TextLight,
+    error = ErrorDark,
+    onError = OnErrorDark,
+    errorContainer = ErrorContainerDark,
+    onErrorContainer = OnErrorContainerDark,
 
-    surface = DarkSurface,
-    onSurface = TextLight,
+    background = BackgroundDark,
+    onBackground = OnBackgroundDark,
 
-    error = PeachAccent,
-    onError = TextLight
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    surfaceVariant = SurfaceVariantDark,
+    onSurfaceVariant = OnSurfaceVariantDark,
+
+    outline = OutlineDark,
+    outlineVariant = OutlineVariantDark,
+
+    scrim = ScrimDark,
+    inverseSurface = InverseSurfaceDark,
+    inverseOnSurface = InverseOnSurfaceDark,
+    inversePrimary = InversePrimaryDark
 )
 
 @Composable
 fun LumakaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // pastel Palette erzwingen
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colors = when {
+        dynamicColor -> {
+            val ctx = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkColors
+        else -> LightColors
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colors,
         typography = Typography,
         content = content
     )
