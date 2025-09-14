@@ -22,7 +22,7 @@ So wird aus einer einfachen To-Do-App ein kleines **Game**, das den Alltag etwas
 - 🏆 Punktesystem für erledigte Aufgaben
 - 🌟 Sticker-Sets zum Freischalten
 - 🎲 Bingo-Board als spielerisches Extra
-- 🎨 Cozy & modernes Design (Peach + Lavender Pastell Theme)
+- 🎨 Cozy & modernes Design 
 - 🌙 Light & Dark Mode mit Toggle
 
 ---
