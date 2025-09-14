@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -24,13 +25,14 @@ fun HomeScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.topbar_title),
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
