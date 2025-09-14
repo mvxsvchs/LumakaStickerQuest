@@ -2,25 +2,45 @@ package com.example.lumaka.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Cozy Grundpalette
-val ForestGreen = Color(0xFF4A6741)   // erdiges Grün
-val WarmBrown   = Color(0xFF8B5E3C)   // warmes Holzbraun
-val Cream       = Color(0xFFFFFBF5)   // weiches Cremeweiß
-val Terracotta  = Color(0xFFD17A5A)   // warmer Terracotta-Ton
+// 🍑 Peach Theme Palette
+val Peach       = Color(0xFFFFCBA4)   // softer peach
+val PeachDeep   = Color(0xFFFF9E80)   // deeper peach accent
+val SoftRose    = Color(0xFFF6A5C0)   // cozy pinkish rose
+val Vanilla     = Color(0xFFFFF3E6)   // warm cream/vanilla
+val Mint        = Color(0xFFA8D5BA)   // soft mint green for contrast
+val CocoaBrown  = Color(0xFF8D6E63)   // light brown for grounding
+val Charcoal    = Color(0xFF3E3E3E)   // dark gray for text in dark mode
 
-// Optional: Varianten für bessere Lesbarkeit & Containerfarben
-val ForestGreenDark   = Color(0xFF2F4B2A)
-val ForestGreenLight  = Color(0xFF6C8C62)
+// Light Mode Cozy Peach
+val md_theme_light_primary = Peach
+val md_theme_light_onPrimary = Color.White
+val md_theme_light_primaryContainer = PeachDeep
+val md_theme_light_onPrimaryContainer = Color.White
 
-val WarmBrownDark     = Color(0xFF5E3C24)
-val WarmBrownLight    = Color(0xFFB68A68)
+val md_theme_light_secondary = SoftRose
+val md_theme_light_onSecondary = Color.White
+val md_theme_light_secondaryContainer = Vanilla
+val md_theme_light_onSecondaryContainer = CocoaBrown
 
-val CreamDark         = Color(0xFFECE0D1)
-val CreamLight        = Color(0xFFFFFFFF)
+val md_theme_light_background = Vanilla
+val md_theme_light_onBackground = Charcoal
 
-val TerracottaDark    = Color(0xFF9E5137)
-val TerracottaLight   = Color(0xFFEBAF95)
+val md_theme_light_surface = Vanilla
+val md_theme_light_onSurface = Charcoal
 
-// Error Colors (cozy abgestimmt)
-val ErrorRed   = Color(0xFFBA1A1A)
-val OnErrorRed = Color(0xFFFFFFFF)
+// Dark Mode Cozy Peach
+val md_theme_dark_primary = PeachDeep
+val md_theme_dark_onPrimary = Color.Black
+val md_theme_dark_primaryContainer = CocoaBrown
+val md_theme_dark_onPrimaryContainer = Vanilla
+
+val md_theme_dark_secondary = Mint
+val md_theme_dark_onSecondary = Color.Black
+val md_theme_dark_secondaryContainer = CocoaBrown
+val md_theme_dark_onSecondaryContainer = Vanilla
+
+val md_theme_dark_background = Charcoal
+val md_theme_dark_onBackground = Vanilla
+
+val md_theme_dark_surface = Charcoal
+val md_theme_dark_onSurface = Vanilla
