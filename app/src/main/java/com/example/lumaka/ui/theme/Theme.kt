@@ -1,6 +1,5 @@
 package com.example.lumaka.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,41 +10,68 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+// ForestGreen, WarmBrown, Cream, Terracotta
+
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = ForestGreen,
+    onPrimary = Cream,
+    primaryContainer = WarmBrown,
+    onPrimaryContainer = Cream,
+
+    secondary = WarmBrown,
+    onSecondary = Cream,
+    secondaryContainer = ForestGreen,
+    onSecondaryContainer = Cream,
+
+    tertiary = Cream,
+    onTertiary = ForestGreen,
+
+    background = WarmBrown,   // dunkles, warmes Braun
+    onBackground = Cream,     // warmer Hellton für Text
+
+    surface = WarmBrown,
+    onSurface = Cream,
+
+    error = Terracotta,
+    onError = Cream
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Terracotta,         // warmes Terracotta als Akzent
+    onPrimary = Cream,
+    primaryContainer = WarmBrown,
+    onPrimaryContainer = Cream,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondary = ForestGreen,      // erdiges Grün als Gegenakzent
+    onSecondary = Cream,
+    secondaryContainer = ForestGreen,
+    onSecondaryContainer = Cream,
+
+    tertiary = WarmBrown,
+    onTertiary = Cream,
+
+    background = Cream,           // cremiger Grund
+    onBackground = WarmBrown,
+
+    surface = Cream,
+    onSurface = WarmBrown,
+
+    error = Terracotta,
+    onError = Cream
 )
 
 @Composable
 fun LumakaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
+    // Stell auf false, wenn du IMMER die cozy Palette willst
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor -> {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
