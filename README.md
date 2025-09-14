@@ -62,4 +62,4 @@ Mach gern ein Issue auf oder schick einen Pull Request.
 
 ## 📜 Lizenz
 
-MIT License © 2025 Lumaka Team
+License © 2025 Lumaka Team
