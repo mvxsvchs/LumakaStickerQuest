@@ -11,23 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lumaka.ui.theme.LumakaTheme
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun NavigationButton(
-    text: String = "Hallo Welt",
+    text: String = "Los geht’s",
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    val isDark = isSystemInDarkTheme()
+
+    // Light: Primary / OnPrimary (wie vorher)
+    // Dark:  Secondary / OnSecondary (besserer Kontrast)
+    val container = if (isDark) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+    val content   = if (isDark) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimary
+
     Button(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.38f)
+            containerColor = container,
+            contentColor = content,
+            disabledContainerColor = container.copy(alpha = 0.12f),
+            disabledContentColor = content.copy(alpha = 0.38f)
         ),
         modifier = modifier
     ) {

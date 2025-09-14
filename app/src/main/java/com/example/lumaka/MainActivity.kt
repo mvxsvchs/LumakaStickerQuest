@@ -5,14 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,12 +22,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LumakaTheme {
+            // Theme-State (Light/Dark)
+            var isDark by rememberSaveable { mutableStateOf(false) }
+
+            LumakaTheme(
+                darkTheme = isDark,
+                dynamicColor = false // Peach Theme erzwingen
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
+                    AppNavigation(
+                        isDark = isDark,
+                        onToggleDark = { isDark = !isDark }
+                    )
                 }
             }
         }
@@ -38,11 +44,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    isDark: Boolean,
+    onToggleDark: () -> Unit
+) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HOME) {
         composable(route = AppScreens.HOME) {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                isDark = isDark,
+                onToggleDark = onToggleDark
+            )
         }
     }
 }

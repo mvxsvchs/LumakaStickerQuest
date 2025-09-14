@@ -10,62 +10,60 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-// 🍑 Peach Palette kommt aus Color.kt:
-// Peach, PeachDeep, SoftRose, Vanilla, Mint, CocoaBrown, Charcoal
+// 🌸 Light Cozy Pastell
+private val LightColorScheme = lightColorScheme(
+    primary = Peach,
+    onPrimary = TextDark,
+    primaryContainer = SoftPink,
+    onPrimaryContainer = TextDark,
 
-private val DarkColorScheme = darkColorScheme(
-    primary = PeachDeep,
-    onPrimary = Charcoal,
-    primaryContainer = CocoaBrown,
-    onPrimaryContainer = Vanilla,
+    secondary = Lavender,
+    onSecondary = TextDark,
+    secondaryContainer = PeachWhite,
+    onSecondaryContainer = TextDark,
 
-    secondary = Mint,
-    onSecondary = Charcoal,
-    secondaryContainer = CocoaBrown,
-    onSecondaryContainer = Vanilla,
+    tertiary = SoftPink,
+    onTertiary = TextDark,
 
-    tertiary = SoftRose,
-    onTertiary = Charcoal,
+    background = PeachWhite,
+    onBackground = TextDark,
 
-    background = Charcoal,
-    onBackground = Vanilla,
+    surface = PeachWhite,
+    onSurface = TextDark,
 
-    surface = Charcoal,
-    onSurface = Vanilla,
-
-    error = SoftRose,
-    onError = Charcoal
+    error = SoftPink,
+    onError = TextDark
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Peach,                 // Hauptakzent
-    onPrimary = Charcoal,
-    primaryContainer = PeachDeep,    // etwas kräftigerer Peach
-    onPrimaryContainer = Charcoal,
+// 🌌 Dark Cozy Pastell
+private val DarkColorScheme = darkColorScheme(
+    primary = LavenderAccent,
+    onPrimary = TextLight,
+    primaryContainer = PeachAccent,
+    onPrimaryContainer = TextLight,
 
-    secondary = SoftRose,            // softer rosé Zweitakzent
-    onSecondary = Charcoal,
-    secondaryContainer = Vanilla,
-    onSecondaryContainer = CocoaBrown,
+    secondary = Lavender,
+    onSecondary = TextLight,
+    secondaryContainer = DarkSurface,
+    onSecondaryContainer = TextLight,
 
-    tertiary = Mint,                 // frischer Kontrast
-    onTertiary = Charcoal,
+    tertiary = PeachAccent,
+    onTertiary = TextLight,
 
-    background = Vanilla,            // cremiger Grund
-    onBackground = Charcoal,
+    background = DarkBg,
+    onBackground = TextLight,
 
-    surface = Vanilla,
-    onSurface = Charcoal,
+    surface = DarkSurface,
+    onSurface = TextLight,
 
-    error = SoftRose,
-    onError = Charcoal
+    error = PeachAccent,
+    onError = TextLight
 )
 
 @Composable
 fun LumakaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // auf false lassen, damit Peach nicht von Material You überschrieben wird
-    dynamicColor: Boolean = false,
+    dynamicColor: Boolean = false, // pastel Palette erzwingen
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
