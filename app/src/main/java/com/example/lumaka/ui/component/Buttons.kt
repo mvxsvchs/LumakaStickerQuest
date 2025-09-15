@@ -30,7 +30,7 @@ fun NavigationButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = container,
             contentColor = content,
-            disabledContainerColor = container.copy(alpha = 0.12f),
+            disabledContainerColor = container.copy(alpha = 0.24f),
             disabledContentColor = content.copy(alpha = 0.36f)
         ),
         onClick = onClick,
@@ -44,16 +44,33 @@ fun NavigationButton(
 
 @Preview(name = "Light", showBackground = true)
 @Composable
-private fun NavigationButtonPreviewLight() {
+private fun NavigationButtonPreviewLightEnabled() {
     LumakaTheme(darkTheme = false, dynamicColor = false) {
-        NavigationButton(modifier = Modifier.padding(16.dp), text = "Button", onClick = {})
+        NavigationButton(modifier = Modifier.padding(all = 16.dp), text = "Button", onClick = {})
+    }
+}
+
+@Preview(name = "Light", showBackground = true)
+@Composable
+private fun NavigationButtonPreviewLightDisabled() {
+    LumakaTheme(darkTheme = false, dynamicColor = false) {
+        NavigationButton(modifier = Modifier.padding(all = 16.dp), text = "Button", onClick = {}, enabled = false)
+    }
+}
+
+
+@Preview(name = "Dark", showBackground = true)
+@Composable
+private fun NavigationButtonPreviewDarkEnabled() {
+    LumakaTheme(darkTheme = true, dynamicColor = false) {
+        NavigationButton(modifier = Modifier.padding(all = 16.dp), text = "Button", onClick = {})
     }
 }
 
 @Preview(name = "Dark", showBackground = true)
 @Composable
-private fun NavigationButtonPreviewDark() {
+private fun NavigationButtonPreviewDarkDisabled() {
     LumakaTheme(darkTheme = true, dynamicColor = false) {
-        NavigationButton(modifier = Modifier.padding(16.dp), text = "Button", onClick = {})
+        NavigationButton(modifier = Modifier.padding(all = 16.dp), text = "Button", onClick = {}, enabled = false)
     }
 }

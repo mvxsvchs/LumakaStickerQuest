@@ -1,6 +1,14 @@
 <resources>
     <string name="app.name">Lumaka</string>
-    <string name="home.title">Willkommen bei Lumaka!</string>
-    <string name="button.home.title">Los geht\'s</string>
+
     <string name="topbar.title">Lumaka</string>
+
+    <string name="home.title">Willkommen bei Lumaka!</string>
+    <string name="home.button.add">Placeholder</string>
+
+    <string name="category.all">Alle</string>
+    <string name="category.general">Allgemein</string>
+    <string name="category.work">Arbeit</string>
+    <string name="category.school">Schule</string>
+    <string name="category.household">Haushalt</string>
 </resources>

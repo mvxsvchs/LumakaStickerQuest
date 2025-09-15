@@ -63,7 +63,7 @@ fun HomeScreen(
 
             // Navigation Button
             NavigationButton(
-                text = stringResource(id = R.string.button_home_title),
+                text = stringResource(id = R.string.home_button_add),
                 onClick = { /* navController.navigate(...) */ }
             )
         }
