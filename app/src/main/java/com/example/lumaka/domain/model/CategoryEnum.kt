@@ -9,4 +9,6 @@ enum class CategoryEnum (val id: Int, @StringRes val title: Int) {
     WORK (id = 2, title = R.string.category_work),
     SCHOOL (id = 3, title = R.string.category_school),
     HOUSEHOLD (id = 4, title = R.string.category_household),
+    GYM (id = 5, title = R.string.category_gym)
+
 }

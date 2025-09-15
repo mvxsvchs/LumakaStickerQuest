@@ -11,4 +11,5 @@
     <string name="category.work">Arbeit</string>
     <string name="category.school">Schule</string>
     <string name="category.household">Haushalt</string>
+    <string name="category.gym">Sport</string>
 </resources>

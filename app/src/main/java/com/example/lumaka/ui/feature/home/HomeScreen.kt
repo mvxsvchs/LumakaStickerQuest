@@ -2,8 +2,13 @@ package com.example.lumaka.ui.feature.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,6 +20,8 @@ import com.example.lumaka.ui.component.NavigationButton
 import com.example.lumaka.ui.theme.*
 import com.example.lumaka.util.rememberPreviewNavController
 import com.example.lumaka.R
+import com.example.lumaka.domain.model.CategoryEnum
+import com.example.lumaka.ui.component.CategoryChip
 import com.example.lumaka.ui.component.NavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,21 +33,39 @@ fun HomeScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.topbar_title),
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                    actionIconContentColor = MaterialTheme.colorScheme.onBackground
-                ),
-            )
+            val selectedChipId = remember { mutableIntStateOf(value = 0) }
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = stringResource(id = R.string.topbar_title),
+                            style = MaterialTheme.typography.headlineMedium,
+                            textAlign = TextAlign.Center,
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                        actionIconContentColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                )
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(space = 6.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp)
+                ) {
+                    val categories = CategoryEnum.entries.toTypedArray()
+                    items(items = categories) { category ->
+                        val isSelected =
+                            remember(key1 = selectedChipId.intValue) { derivedStateOf { selectedChipId.intValue == category.id } }
+                        CategoryChip(
+                            selected = isSelected.value,
+                            title = category.title,
+                            onClick = { selectedChipId.intValue = category.id })
+                    }
+                }
+            }
         },
         bottomBar = {
             NavigationBar(navController = navController)
