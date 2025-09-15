@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lumaka.R
+import com.example.lumaka.ui.theme.LumakaTheme
 
 @Composable
 fun CategoryChip(modifier: Modifier = Modifier, selected: Boolean, @StringRes title: Int) =
@@ -33,11 +34,18 @@ fun CategoryChip(modifier: Modifier = Modifier, selected: Boolean, @StringRes ti
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = MaterialTheme.colorScheme.primary,
             selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.12f),
-            disabledLabelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.36f)
+            containerColor = MaterialTheme.colorScheme.surface,
+            labelColor = MaterialTheme.colorScheme.onSurface,
         ),
         elevation = FilterChipDefaults.filterChipElevation(),
-        //border = FilterChipDefaults.filterChipBorder(),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = selected,
+            borderColor = MaterialTheme.colorScheme.primary,
+            selectedBorderColor = MaterialTheme.colorScheme.onSurface,
+            borderWidth = 1.dp,
+            selectedBorderWidth = 2.dp
+        ),
         onClick = {},
     )
 
@@ -45,24 +53,32 @@ fun CategoryChip(modifier: Modifier = Modifier, selected: Boolean, @StringRes ti
 @Preview
 @Composable
 private fun CategoryChipPreviewSelected() {
-    CategoryChip(selected = true, title = R.string.category_general)
+    LumakaTheme(darkTheme = false, dynamicColor = false) {
+        CategoryChip(selected = true, title = R.string.category_general)
+    }
 }
 
 
 @Preview
 @Composable
 private fun CategoryChipPreviewSelectedLight() {
-    CategoryChip(selected = true, title = R.string.category_general)
+    LumakaTheme(darkTheme = true, dynamicColor = false) {
+        CategoryChip(selected = true, title = R.string.category_general)
+    }
 }
 
 @Preview
 @Composable
 private fun CategoryChipPreviewNotSelected() {
-    CategoryChip(selected = false, title = R.string.category_general)
+    LumakaTheme(darkTheme = false, dynamicColor = false) {
+        CategoryChip(selected = false, title = R.string.category_general)
+    }
 }
 
 @Preview
 @Composable
 private fun CategoryChipPreviewNotSelectedDark() {
-    CategoryChip(selected = false, title = R.string.category_general)
+    LumakaTheme(darkTheme = true, dynamicColor = false) {
+        CategoryChip(selected = false, title = R.string.category_general)
+    }
 }
