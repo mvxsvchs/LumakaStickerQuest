@@ -1,6 +1,7 @@
 package com.example.lumaka.ui.feature.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +37,7 @@ fun HomeScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             val selectedChipId = remember { mutableIntStateOf(value = 0) }
+            val selectedDropdownId = remember { mutableIntStateOf(value = 0) }
             Column {
                 TopAppBar(
                     title = {
@@ -67,14 +70,33 @@ fun HomeScreen(
                     }
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    SelectionDropdownMenu(
-                        modifier = Modifier,
-                        expanded = true,
-                        selectedCategoryId = 0
-                    )
+                    val expanded = remember { mutableStateOf(value = false) }
+
+                    Box() {
+                        Text(
+                            modifier = Modifier.clickable { expanded.value = true },
+                            text = stringResource(
+                                id = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue }?.title
+                                    ?: R.string.category_all
+                            )
+                        )
+                        SelectionDropdownMenu(
+                            modifier = Modifier,
+                            expanded = expanded.value,
+                            selectedCategoryId = selectedDropdownId.intValue,
+                            onDismiss = { expanded.value = false },
+                            onItemClick = {categoryId ->
+                                selectedDropdownId.intValue = categoryId
+                                expanded.value = false
+                            }
+                        )
+                    }
+
 
                     IconButton(
                         iconId = R.drawable.button_add_24,
