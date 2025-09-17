@@ -65,6 +65,16 @@ fun HomeScreen(
                             onClick = { selectedChipId.intValue = category.id })
                     }
                 }
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    IconButton(
+                        iconId = R.drawable.button_add_24,
+                        onClick = { /* navController.navigate(...) */
+                        }
+                    )
+                }
             }
         },
         bottomBar = {
@@ -84,11 +94,6 @@ fun HomeScreen(
                 text = stringResource(id = R.string.home_title),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground
-            )
-
-            IconButton(
-                iconId = R.drawable.button_add_24,
-                onClick = { /* navController.navigate(...) */ }
             )
         }
     }
