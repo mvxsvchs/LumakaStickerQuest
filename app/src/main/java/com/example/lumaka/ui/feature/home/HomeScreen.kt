@@ -1,10 +1,12 @@
 package com.example.lumaka.ui.feature.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -17,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.lumaka.ui.component.IconButton
 import com.example.lumaka.ui.theme.*
@@ -72,25 +75,44 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp),
+                        .padding(start = 8.dp, end = 8.dp, top = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     val expanded = remember { mutableStateOf(value = false) }
 
-                    Box() {
-                        Text(
-                            modifier = Modifier.clickable { expanded.value = true },
-                            text = stringResource(
-                                id = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue }?.title
-                                    ?: R.string.category_all
+                    Box {
+                        Row(
+                            modifier = Modifier
+                                .clickable { expanded.value = true }
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = RoundedCornerShape(size = 8.dp),
+                                )
+                                .width(
+                                    width = 130.dp
+                                )
+                                .height(
+                                    height = 48.dp
+                                ),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontSize = 18.sp,
+                                text = stringResource(
+                                    id = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue }?.title
+                                        ?: R.string.category_all
+                                )
                             )
-                        )
+                        }
+
                         SelectionDropdownMenu(
                             modifier = Modifier,
                             expanded = expanded.value,
                             selectedCategoryId = selectedDropdownId.intValue,
                             onDismiss = { expanded.value = false },
-                            onItemClick = {categoryId ->
+                            onItemClick = { categoryId ->
                                 selectedDropdownId.intValue = categoryId
                                 expanded.value = false
                             }

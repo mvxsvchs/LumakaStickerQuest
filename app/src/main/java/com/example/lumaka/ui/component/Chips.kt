@@ -27,7 +27,7 @@ fun CategoryChip(
         label = {
             Text(
                 text = stringResource(id = title),
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelMedium
             )
         },
         shape = RoundedCornerShape(16.dp),
