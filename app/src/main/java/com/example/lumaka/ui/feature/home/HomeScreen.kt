@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.lumaka.ui.component.NavigationButton
+import com.example.lumaka.ui.component.IconButton
 import com.example.lumaka.ui.theme.*
 import com.example.lumaka.util.rememberPreviewNavController
 import com.example.lumaka.R
@@ -86,9 +86,8 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            // Navigation Button
-            NavigationButton(
-                text = stringResource(id = R.string.home_button_add),
+            IconButton(
+                iconId = R.drawable.button_add_24,
                 onClick = { /* navController.navigate(...) */ }
             )
         }

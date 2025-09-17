@@ -4,7 +4,7 @@
     <string name="topbar.title">Lumaka</string>
 
     <string name="home.title">Willkommen bei Lumaka!</string>
-    <string name="home.button.add">Placeholder</string>
+    <string name="home.button.add">+</string>
 
     <string name="category.all">Alle</string>
     <string name="category.general">Allgemein</string>
