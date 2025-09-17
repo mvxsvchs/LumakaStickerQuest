@@ -23,6 +23,7 @@ import com.example.lumaka.R
 import com.example.lumaka.domain.model.CategoryEnum
 import com.example.lumaka.ui.component.CategoryChip
 import com.example.lumaka.ui.component.NavigationBar
+import com.example.lumaka.ui.component.SelectionDropdownMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,6 +70,12 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
+                    SelectionDropdownMenu(
+                        modifier = Modifier,
+                        expanded = true,
+                        selectedCategoryId = 0
+                    )
+
                     IconButton(
                         iconId = R.drawable.button_add_24,
                         onClick = { /* navController.navigate(...) */
