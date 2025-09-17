@@ -129,6 +129,10 @@ fun HomeScreen(
 
 
                     IconButton(
+                        modifier = Modifier
+                            .height(
+                                height = 48.dp
+                            ),
                         iconId = R.drawable.button_add_24,
                         onClick = { /* navController.navigate(...) */
                         }
