@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -94,7 +96,8 @@ fun HomeScreen(
                                 .height(
                                     height = 48.dp
                                 ),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
                                 modifier = Modifier.padding(start = 8.dp, end = 8.dp),
@@ -104,6 +107,11 @@ fun HomeScreen(
                                     id = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue }?.title
                                         ?: R.string.category_all
                                 )
+                            )
+                            Icon(
+                                modifier = Modifier.padding(end = 8.dp),
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown Icon"
                             )
                         }
 
