@@ -3,13 +3,13 @@
 
     <string name="topbar.title">Lumaka</string>
 
-    <string name="home.title">Willkommen bei Lumaka!</string>
-    <string name="home.button.add">+</string>
+    <string name="home.title">Noch keine Aufgaben</string>
 
     <string name="category.all">Alle</string>
     <string name="category.general">Allgemein</string>
     <string name="category.work">Arbeit</string>
-    <string name="category.school">Schule</string>
     <string name="category.household">Haushalt</string>
+    <string name="category.school">Schule</string>
+    <string name="category.selfcare">Selbstpflege</string>
     <string name="category.gym">Sport</string>
 </resources>
