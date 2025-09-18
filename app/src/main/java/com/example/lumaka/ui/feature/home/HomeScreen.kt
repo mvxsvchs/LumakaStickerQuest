@@ -91,7 +91,7 @@ fun HomeScreen(
                                     shape = RoundedCornerShape(size = 8.dp),
                                 )
                                 .width(
-                                    width = 130.dp
+                                    width = 154.dp
                                 )
                                 .height(
                                     height = 48.dp
