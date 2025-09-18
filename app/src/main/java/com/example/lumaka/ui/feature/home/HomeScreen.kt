@@ -31,6 +31,7 @@ import com.example.lumaka.domain.model.CategoryEnum
 import com.example.lumaka.ui.component.CategoryChip
 import com.example.lumaka.ui.component.NavigationBar
 import com.example.lumaka.ui.component.SelectionDropdownMenu
+import com.example.lumaka.ui.component.TextInputField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +44,8 @@ fun HomeScreen(
         topBar = {
             val selectedChipId = remember { mutableIntStateOf(value = 0) }
             val selectedDropdownId = remember { mutableIntStateOf(value = 0) }
+            val textInputState = remember { mutableStateOf(value = "") }
+
             Column {
                 TopAppBar(
                     title = {
@@ -78,7 +81,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp, end = 8.dp, top = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     val expanded = remember { mutableStateOf(value = false) }
 
@@ -126,6 +130,13 @@ fun HomeScreen(
                             }
                         )
                     }
+
+                    TextInputField(
+                        modifier = Modifier
+                            .weight(weight = 1f),
+                        currentText = textInputState.value,
+                        onTextChange = { textInputState.value = it },
+                    )
 
 
                     IconButton(
