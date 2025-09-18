@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.lumaka.R
 
@@ -51,12 +52,19 @@ fun TextInputField(
             focusedContainerColor = MaterialTheme.colorScheme.surface,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
+            //cursorColor = Color.Transparent,
         ),
         onValueChange = {
             textState.value = it
             onTextChange(it.text)
         },
-        placeholder = { Text(text = stringResource(id = R.string.home_new_tasks)) },
+        placeholder = {
+            Text(
+                text = stringResource(id = R.string.home_new_tasks),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = {
