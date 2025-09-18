@@ -98,7 +98,7 @@ fun HomeScreen(
                                     width = 154.dp
                                 )
                                 .height(
-                                    height = 48.dp
+                                    height = 64.dp
                                 ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -133,6 +133,7 @@ fun HomeScreen(
 
                     TextInputField(
                         modifier = Modifier
+                            .height(height = 64.dp)
                             .weight(weight = 1f),
                         currentText = textInputState.value,
                         onTextChange = { textInputState.value = it },
@@ -142,7 +143,7 @@ fun HomeScreen(
                     IconButton(
                         modifier = Modifier
                             .height(
-                                height = 48.dp
+                                height = 64.dp
                             ),
                         iconId = R.drawable.button_add_24,
                         onClick = { /* navController.navigate(...) */
