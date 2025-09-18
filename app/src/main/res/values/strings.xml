@@ -3,7 +3,9 @@
 
     <string name="topbar.title">Lumaka</string>
 
-    <string name="home.title">Noch keine Aufgaben</string>
+    <string name="home.no_tasks">Noch keine Aufgaben</string>
+    <string name="home.new_tasks">Neue Aufgabe...</string>
+
 
     <string name="category.all">Alle</string>
     <string name="category.general">Allgemein</string>

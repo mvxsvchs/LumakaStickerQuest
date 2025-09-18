@@ -154,7 +154,7 @@ fun HomeScreen(
         ) {
 
             Text(
-                text = stringResource(id = R.string.home_title),
+                text = stringResource(id = R.string.home_no_tasks),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
