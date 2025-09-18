@@ -1,13 +1,17 @@
 package com.example.lumaka.ui.component
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,8 +36,19 @@ fun CategoryChip(
                 fontSize = 14.sp,
             )
         },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(size = 16.dp),
+        leadingIcon = {
+            if (selected) {
+                Icon(
+                    modifier = Modifier.size(size = 16.dp),
+                    painter = painterResource(
+                        id = R.drawable.chip_check_24
+                    ),
+                    contentDescription = null,
 
+                    )
+            }
+        },
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = MaterialTheme.colorScheme.primary,
             selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
@@ -49,7 +64,7 @@ fun CategoryChip(
             borderWidth = 1.dp,
             selectedBorderWidth = 2.dp
         ),
-        onClick = {onClick()},
+        onClick = { onClick() },
     )
 
 
