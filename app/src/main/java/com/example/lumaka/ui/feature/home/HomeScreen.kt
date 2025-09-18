@@ -63,7 +63,9 @@ fun HomeScreen(
                     ),
                 )
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(space = 6.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
@@ -72,6 +74,8 @@ fun HomeScreen(
                         val isSelected =
                             remember(key1 = selectedChipId.intValue) { derivedStateOf { selectedChipId.intValue == category.id } }
                         CategoryChip(
+                            modifier = Modifier
+                                .height(height = 40.dp),
                             selected = isSelected.value,
                             title = category.title,
                             onClick = { selectedChipId.intValue = category.id })
