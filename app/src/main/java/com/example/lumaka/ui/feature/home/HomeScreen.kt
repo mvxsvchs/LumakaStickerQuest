@@ -99,7 +99,7 @@ fun HomeScreen(
                                     shape = RoundedCornerShape(size = 8.dp),
                                 )
                                 .width(
-                                    width = 154.dp
+                                    width = 124.dp
                                 )
                                 .height(
                                     height = 64.dp
@@ -108,9 +108,9 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
-                                modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                                modifier = Modifier.padding(start = 8.dp),
                                 style = MaterialTheme.typography.labelMedium,
-                                fontSize = 18.sp,
+                                fontSize = 14.sp,
                                 text = stringResource(
                                     id = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue }?.title
                                         ?: R.string.category_all
@@ -141,17 +141,6 @@ fun HomeScreen(
                             .weight(weight = 1f),
                         currentText = textInputState.value,
                         onTextChange = { textInputState.value = it },
-                    )
-
-
-                    IconButton(
-                        modifier = Modifier
-                            .height(
-                                height = 64.dp
-                            ),
-                        iconId = R.drawable.button_add_24,
-                        onClick = { /* navController.navigate(...) */
-                        }
                     )
                 }
             }
