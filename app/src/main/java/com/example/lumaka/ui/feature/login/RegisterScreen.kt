@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lumaka.R
+import com.example.lumaka.ui.component.TextInputField
 import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
@@ -58,35 +59,31 @@ fun Register(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(space = 16.dp)
             ) {
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = stringResource(id = R.string.login_username)) },
+                TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
+                    currentText = email,
+                    onTextChange = { email = it },
+                    placeholder = R.string.login_username,
                 )
-                TextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = stringResource(id = R.string.login_email)) },
+                TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
+                    currentText = email,
+                    onTextChange = { email = it },
+                    placeholder = R.string.login_email,
                 )
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = stringResource(id = R.string.login_password)) },
+                TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
+                    currentText = password,
+                    onTextChange = {},
+                    placeholder = R.string.login_password,
+                    shouldHideText = true,
                 )
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = stringResource(id = R.string.login_password_confirm)) },
+                TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
+                    currentText = password,
+                    onTextChange = {},
+                    placeholder = R.string.login_password_confirm,
+                    shouldHideText = true,
                 )
             }
         }
