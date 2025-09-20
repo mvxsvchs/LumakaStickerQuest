@@ -13,7 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.lumaka.ui.feature.home.HomeView
+import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.feature.login.StartView
+import com.example.lumaka.ui.feature.register.Register
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 
@@ -46,6 +48,16 @@ fun AppNavigation(
         }
         composable(route = AppScreens.HOME) {
             HomeView(
+                navController = navController,
+            )
+        }
+        composable(route = AppScreens.LOGIN) {
+            Login(
+                navController = navController,
+            )
+        }
+        composable(route = AppScreens.REGISTER) {
+            Register(
                 navController = navController,
             )
         }

@@ -39,7 +39,6 @@ import com.example.lumaka.ui.component.TextInputField
 fun HomeView(
     navController: NavController
 ) {
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {

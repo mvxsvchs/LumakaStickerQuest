@@ -9,6 +9,11 @@
 
     <string name="login.login">Einloggen</string>
     <string name="login.register">Registrieren</string>
+    <string name="login.username">Benutzername</string>
+    <string name="login.email">Email</string>
+    <string name="login.password">Passwort</string>
+    <string name="login.password_confirm">Passwort bestätigen</string>
+
 
 
     <string name="category.all">Alle</string>
