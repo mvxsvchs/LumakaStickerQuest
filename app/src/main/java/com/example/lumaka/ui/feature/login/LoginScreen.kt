@@ -53,14 +53,14 @@ fun Login(
                 Text(
                     text = stringResource(id = R.string.app_name),
                     style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
                 TextField(
                     value = email,
                     onValueChange = { email = it },
                     label = { Text(text = stringResource(id = R.string.login_email))},
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
                 )
                 TextField(
                     value = password,
@@ -68,7 +68,7 @@ fun Login(
                     label = { Text(text = stringResource(id = R.string.login_password))},
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true
+                    singleLine = true,
                 )
             }
         }
