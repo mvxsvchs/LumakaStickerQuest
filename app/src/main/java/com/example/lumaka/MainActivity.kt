@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.lumaka.ui.feature.home.HomeView
+import com.example.lumaka.ui.feature.login.StartView
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 
@@ -37,7 +38,12 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.HOME) {
+    NavHost(navController = navController, startDestination = AppScreens.START) {
+        composable(route = AppScreens.START) {
+            StartView(
+                navController = navController,
+            )
+        }
         composable(route = AppScreens.HOME) {
             HomeView(
                 navController = navController,

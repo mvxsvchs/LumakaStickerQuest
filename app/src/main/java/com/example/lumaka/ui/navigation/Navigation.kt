@@ -4,14 +4,8 @@ package com.example.lumaka.ui.navigation
 // Auflisten aller Features
 object AppScreens {
     const val HOME = "Home"
-}
+    const val START = "Start"
+    const val LOGIN = "Login"
+    const val REGISTER = "Register"
 
-//
-object AppArgs {
-    const val USER_ID = "userId"
-}
-
-// Auflisten jeder Route
-object AppDestinations {
-    const val HOME_ROUTE = AppScreens.HOME
 }

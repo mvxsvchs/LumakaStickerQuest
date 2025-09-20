@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,13 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lumaka.R
 import com.example.lumaka.ui.component.TextButton
-import com.example.lumaka.ui.feature.home.HomeView
+import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
 
 
 @Composable
-fun LoginView(
+fun StartView(
     navController: NavController
 ) {
     Scaffold(
@@ -48,14 +47,14 @@ fun LoginView(
                         .defaultMinSize(minHeight = 48.dp)
                         .fillMaxWidth(),
                     textId = R.string.login_login,
-                    onClick = { navController.navigate("login") }
+                    onClick = { navController.navigate(route = AppScreens.LOGIN) }
                 )
                 TextButton(
                     modifier = Modifier
                         .defaultMinSize(minHeight = 48.dp)
                         .fillMaxWidth(),
                     textId = R.string.login_register,
-                    onClick = { navController.navigate("register") }
+                    onClick = { navController.navigate(route = AppScreens.REGISTER) }
                 )
             }
 
@@ -65,20 +64,20 @@ fun LoginView(
 }
 
 
-@Preview(name = "Login Light", showBackground = true)
+@Preview(name = "StartView Light", showBackground = true)
 @Composable
-private fun LoginViewPreviewLight() {
+private fun StartViewPreviewLight() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        LoginView(previewNavController)
+        StartView(previewNavController)
     }
 }
 
-@Preview(name = "Login Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "StartView Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun LoginViewPreviewDark() {
+private fun StartViewPreviewDark() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        LoginView(previewNavController)
+        StartView(previewNavController)
     }
 }
