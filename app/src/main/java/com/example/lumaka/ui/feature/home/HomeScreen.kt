@@ -33,6 +33,7 @@ import com.example.lumaka.ui.component.CategoryChip
 import com.example.lumaka.ui.component.NavigationBar
 import com.example.lumaka.ui.component.SelectionDropdownMenu
 import com.example.lumaka.ui.component.TextInputField
+import com.example.lumaka.ui.component.TopBarText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,25 +61,6 @@ fun HomeView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TopBarText() {
-    TopAppBar(
-        title = {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(id = R.string.topbar_title),
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center,
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
-            actionIconContentColor = MaterialTheme.colorScheme.onBackground
-        ),
-    )
-}
 
 @Composable
 private fun ChipsSelection(selectedChipId: MutableIntState) {

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lumaka.R
 import com.example.lumaka.ui.component.TextInputField
+import com.example.lumaka.ui.component.TopBarText
 import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
@@ -39,6 +40,7 @@ fun Register(
     Scaffold(
         modifier = Modifier,
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = { TopBarText() },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -47,11 +49,6 @@ fun Register(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(
-                text = stringResource(id = R.string.app_name),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
 
             Column(
                 modifier = Modifier
