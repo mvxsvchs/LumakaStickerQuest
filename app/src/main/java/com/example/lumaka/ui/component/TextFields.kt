@@ -1,5 +1,6 @@
 package com.example.lumaka.ui.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,9 +18,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.lumaka.R
 
 @Composable
@@ -27,6 +31,8 @@ fun TextInputField(
     modifier: Modifier = Modifier,
     currentText: String,
     onTextChange: (String) -> Unit,
+    @StringRes placeholder: Int,
+    shouldHideText: Boolean = false,
 ) {
     val textState = remember {
         mutableStateOf(
@@ -51,7 +57,6 @@ fun TextInputField(
             focusedContainerColor = MaterialTheme.colorScheme.surface,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
-            //cursorColor = Color.Transparent,
         ),
         onValueChange = {
             textState.value = it
@@ -59,11 +64,12 @@ fun TextInputField(
         },
         placeholder = {
             Text(
-                text = stringResource(id = R.string.home_new_tasks),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = stringResource(id = placeholder),
+                style = MaterialTheme.typography.labelMedium,
+                fontSize = 14.sp,
             )
         },
+        visualTransformation = if (shouldHideText) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = {

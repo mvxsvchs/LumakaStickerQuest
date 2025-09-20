@@ -120,6 +120,8 @@ private fun InputRow(textInputState: MutableState<String>, selectedDropdownId: M
                 .weight(weight = 1f),
             currentText = textInputState.value,
             onTextChange = { textInputState.value = it },
+            placeholder = R.string.home_new_tasks,
+
         )
     }
 }

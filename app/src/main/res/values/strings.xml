@@ -7,6 +7,7 @@
     <string name="home.new_tasks">Neue Aufgabe...</string>
 
 
+    <string name="login.welcome">Hey! Willkommen bei Lumaka</string>
     <string name="login.login">Einloggen</string>
     <string name="login.register">Registrieren</string>
     <string name="login.username">Benutzername</string>
