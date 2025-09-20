@@ -44,28 +44,28 @@ fun Login(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             Column(
                 modifier = Modifier
                     .padding(start = 48.dp, end = 48.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(space = 16.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.app_name),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
                 TextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text(text = stringResource(id = R.string.login_email))},
+                    label = { Text(text = stringResource(id = R.string.login_email)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                 )
                 TextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text(text = stringResource(id = R.string.login_password))},
+                    label = { Text(text = stringResource(id = R.string.login_password)) },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
