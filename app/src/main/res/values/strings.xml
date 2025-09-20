@@ -6,6 +6,11 @@
     <string name="home.no_tasks">Noch keine Aufgaben</string>
     <string name="home.new_tasks">Neue Aufgabe...</string>
 
+
+    <string name="login.login">Einloggen</string>
+    <string name="login.register">Registrieren</string>
+
+
     <string name="category.all">Alle</string>
     <string name="category.general">Allgemein</string>
     <string name="category.work">Arbeit</string>

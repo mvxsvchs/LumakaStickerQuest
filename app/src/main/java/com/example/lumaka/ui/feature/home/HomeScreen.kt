@@ -36,7 +36,7 @@ import com.example.lumaka.ui.component.TextInputField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun HomeView(
     navController: NavController
 ) {
 
@@ -200,7 +200,7 @@ private fun EmptyState(padding: PaddingValues) {
 private fun HomeScreenPreviewLight() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        HomeScreen(previewNavController)
+        HomeView(previewNavController)
     }
 }
 
@@ -209,6 +209,6 @@ private fun HomeScreenPreviewLight() {
 private fun HomeScreenPreviewDark() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        HomeScreen(previewNavController)
+        HomeView(previewNavController)
     }
 }

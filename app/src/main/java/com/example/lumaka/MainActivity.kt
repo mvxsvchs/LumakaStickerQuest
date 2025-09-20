@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.lumaka.ui.feature.home.HomeScreen
+import com.example.lumaka.ui.feature.home.HomeView
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 
@@ -40,7 +39,7 @@ fun AppNavigation(
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HOME) {
         composable(route = AppScreens.HOME) {
-            HomeScreen(
+            HomeView(
                 navController = navController,
             )
         }
