@@ -3,6 +3,7 @@ package com.example.lumaka.ui.feature.login
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,8 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lumaka.R
+import com.example.lumaka.ui.component.TextButton
 import com.example.lumaka.ui.component.TextInputField
 import com.example.lumaka.ui.component.TopBarText
+import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
 
@@ -68,6 +71,13 @@ fun Login(
                     placeholder = R.string.login_password,
                     shouldHideText = true,
                 )
+                TextButton(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 48.dp)
+                        .fillMaxWidth(),
+                    textId = R.string.login_login,
+                    onClick = { navController.navigate(route = AppScreens.HOME) }
+                )
             }
         }
     }
@@ -83,11 +93,7 @@ private fun LoginViewPreviewLight() {
     }
 }
 
-@Preview(
-    name = "LoginView Dark",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview(name = "LoginView Dark",showBackground = true,uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LoginViewPreviewDark() {
     val previewNavController = rememberPreviewNavController()

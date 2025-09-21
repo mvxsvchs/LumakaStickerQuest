@@ -15,9 +15,9 @@ class UserRepository @Inject constructor(private val api: QuestService) {
         api.registerUser(register = registration.toDTO())
     }
 
-    suspend fun loginUser(login: Login): User {
+    suspend fun loginUser(login: Login): Boolean {
         val result = api.loginUser(login = login.toDTO())
-        return result.toDomain()
+        return result != null
     }
 
     suspend fun getUserById(userId: Int): User {

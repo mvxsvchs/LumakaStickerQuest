@@ -3,6 +3,7 @@ package com.example.lumaka.ui.feature.register
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,9 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lumaka.R
+import com.example.lumaka.ui.component.TextButton
 import com.example.lumaka.ui.component.TextInputField
 import com.example.lumaka.ui.component.TopBarText
 import com.example.lumaka.ui.feature.login.Login
+import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
 
@@ -81,6 +84,13 @@ fun Register(
                     onTextChange = {},
                     placeholder = R.string.login_password_confirm,
                     shouldHideText = true,
+                )
+                TextButton(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 48.dp)
+                        .fillMaxWidth(),
+                    textId = R.string.login_register,
+                    onClick = { navController.navigate(route = AppScreens.START) }
                 )
             }
         }
