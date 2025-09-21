@@ -8,7 +8,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-
 interface QuestService {
     @POST(value = "user/register")
     suspend fun registerUser(@Body register: RegisterDTO)
