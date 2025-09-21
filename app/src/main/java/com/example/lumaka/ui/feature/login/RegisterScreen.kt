@@ -22,12 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lumaka.R
 import com.example.lumaka.ui.component.TextButton
 import com.example.lumaka.ui.component.TextInputField
 import com.example.lumaka.ui.component.TopBarText
 import com.example.lumaka.ui.feature.login.Login
+import com.example.lumaka.ui.feature.login.RegisterViewModel
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
@@ -35,10 +37,12 @@ import com.example.lumaka.util.rememberPreviewNavController
 
 @Composable
 fun Register(
-    navController: NavController
+    navController: NavController,
+    registerViewModel: RegisterViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(value = "") }
+    var email by remember { mutableStateOf(value = "") }
+    var password by remember { mutableStateOf(value = "") }
 
     Scaffold(
         modifier = Modifier,
@@ -61,8 +65,8 @@ fun Register(
             ) {
                 TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    currentText = email,
-                    onTextChange = { email = it },
+                    currentText = username,
+                    onTextChange = { username = it },
                     placeholder = R.string.login_username,
                 )
                 TextInputField(
@@ -90,7 +94,14 @@ fun Register(
                         .defaultMinSize(minHeight = 48.dp)
                         .fillMaxWidth(),
                     textId = R.string.login_register,
-                    onClick = { navController.navigate(route = AppScreens.START) }
+                    onClick = {
+                        navController.navigate(route = AppScreens.START)
+                        registerViewModel.onRegister(
+                            username = username,
+                            email = email,
+                            password = password
+                        )
+                    }
                 )
             }
         }
