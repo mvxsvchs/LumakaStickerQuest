@@ -1,13 +1,27 @@
 package com.example.lumaka.data.repository
 
+import com.example.lumaka.data.mapper.toDTO
+import com.example.lumaka.data.mapper.toDomain
 import com.example.lumaka.data.remote.api.QuestService
-import com.example.lumaka.data.remote.dto.RegisterDTO
+import com.example.lumaka.domain.model.Login
+import com.example.lumaka.domain.model.Registration
+import com.example.lumaka.domain.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(private val api: QuestService) {
-    suspend fun registerUser(username: String, mail: String, password: String) {
-        api.registerUser(register = RegisterDTO(username, mail, password))
+    suspend fun registerUser(registration: Registration) {
+        api.registerUser(register = registration.toDTO())
+    }
+
+    suspend fun loginUser(login: Login): User {
+        val result = api.loginUser(login = login.toDTO())
+        return result.toDomain()
+    }
+
+    suspend fun getUserById(userId: Int): User {
+        val result = api.getUserById(userid = userId)
+        return result.toDomain()
     }
 }
