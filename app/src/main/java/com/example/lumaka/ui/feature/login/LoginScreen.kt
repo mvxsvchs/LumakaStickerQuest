@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.lumaka.R
 import com.example.lumaka.ui.component.TextInputField
@@ -30,7 +31,8 @@ import com.example.lumaka.util.rememberPreviewNavController
 
 @Composable
 fun Login(
-    navController: NavController
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -62,7 +64,7 @@ fun Login(
                 TextInputField(
                     modifier = Modifier.fillMaxWidth(),
                     currentText = password,
-                    onTextChange = {},
+                    onTextChange = {password = it},
                     placeholder = R.string.login_password,
                     shouldHideText = true,
                 )
