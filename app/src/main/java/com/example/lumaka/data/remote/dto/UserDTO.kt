@@ -1,4 +1,4 @@
-package com.example.lumaka.data.dto
+package com.example.lumaka.data.remote.dto
 
 data class UserDTO(
     val username: String,

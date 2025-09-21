@@ -1,8 +1,8 @@
-package com.example.lumaka.data.api
+package com.example.lumaka.data.remote.api
 
-import com.example.lumaka.data.dto.LoginDTO
-import com.example.lumaka.data.dto.RegisterDTO
-import com.example.lumaka.data.dto.UserDTO
+import com.example.lumaka.data.remote.dto.LoginDTO
+import com.example.lumaka.data.remote.dto.RegisterDTO
+import com.example.lumaka.data.remote.dto.UserDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
