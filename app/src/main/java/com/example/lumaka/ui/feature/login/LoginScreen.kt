@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,14 @@ fun Login(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = Unit){
+        loginViewModel.onLoginResult.collect{
+            if(it){
+                navController.navigate(route = AppScreens.HOME)
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier,
@@ -77,7 +86,6 @@ fun Login(
                         .fillMaxWidth(),
                     textId = R.string.login_login,
                     onClick = {
-                        navController.navigate(route = AppScreens.HOME)
                         loginViewModel.onLogin(
                             email = email,
                             password = password
