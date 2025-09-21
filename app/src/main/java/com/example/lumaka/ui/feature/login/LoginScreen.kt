@@ -35,7 +35,7 @@ import com.example.lumaka.util.rememberPreviewNavController
 @Composable
 fun Login(
     navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -76,7 +76,13 @@ fun Login(
                         .defaultMinSize(minHeight = 48.dp)
                         .fillMaxWidth(),
                     textId = R.string.login_login,
-                    onClick = { navController.navigate(route = AppScreens.HOME) }
+                    onClick = {
+                        navController.navigate(route = AppScreens.HOME)
+                        loginViewModel.onLogin(
+                            email = email,
+                            password = password
+                        )
+                    }
                 )
             }
         }
