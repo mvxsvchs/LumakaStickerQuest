@@ -78,14 +78,14 @@ fun Register(
                 TextInputField(
                     modifier = Modifier.fillMaxWidth(),
                     currentText = password,
-                    onTextChange = {},
+                    onTextChange = { password = it },
                     placeholder = R.string.login_password,
                     shouldHideText = true,
                 )
                 TextInputField(
                     modifier = Modifier.fillMaxWidth(),
                     currentText = password,
-                    onTextChange = {},
+                    onTextChange = { password = it },
                     placeholder = R.string.login_password_confirm,
                     shouldHideText = true,
                 )

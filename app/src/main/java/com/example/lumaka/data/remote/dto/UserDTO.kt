@@ -2,7 +2,7 @@ package com.example.lumaka.data.remote.dto
 
 data class UserDTO(
     val username: String,
-    val userid: Int,
+    val userId: Int,
     val points: Int,
-    val stickerid: List<Int>,
+    val stickerId: List<Int>,
 )
