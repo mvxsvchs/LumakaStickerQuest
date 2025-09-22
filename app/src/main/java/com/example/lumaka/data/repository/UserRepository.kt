@@ -20,8 +20,8 @@ class UserRepository @Inject constructor(private val api: QuestService) {
         return result != null
     }
 
-    suspend fun getUserById(userId: Int): User {
+    suspend fun getUserById(userId: Int): User? {
         val result = api.getUserById(userid = userId)
-        return result.toDomain()
+        return result?.toDomain()
     }
 }

@@ -12,9 +12,9 @@ interface QuestService {
     @POST(value = "user/register")
     suspend fun registerUser(@Body register: RegisterDTO)
 
-    @GET(value = "user/login")
+    @POST(value = "user/login")
     suspend fun loginUser(@Body login: LoginDTO): UserDTO?
 
     @GET(value = "user/{id}")
-    suspend fun getUserById(@Path(value = "id") userid: Int): UserDTO
+    suspend fun getUserById(@Path(value = "id") userid: Int): UserDTO?
 }
