@@ -302,14 +302,15 @@ private fun TaskList(
                                 when (dragMode) {
                                     DragMode.Horizontal -> {
                                         val current = offsetX.value
-                                        if (abs(current) > 120f) {
-                                            val target = if (current > 0) 800f else -800f
+                                        if (current < -80f) {
+                                            val target = -800f
                                             scope.launch {
                                                 offsetX.animateTo(target, tween(200))
                                                 onDelete(task.id)
                                                 offsetX.snapTo(0f)
                                             }
                                         } else {
+                                            // Snap back for right swipes or small drags
                                             scope.launch { offsetX.animateTo(0f, tween(180)) }
                                         }
                                     }
