@@ -9,5 +9,6 @@ object AppScreens {
     const val REGISTER = "Register"
     const val PROFILE = "Profile"
     const val SETTINGS = "Settings"
+    const val PRIVACY = "Privacy"
 
 }
