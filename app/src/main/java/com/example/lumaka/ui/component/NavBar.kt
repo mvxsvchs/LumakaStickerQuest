@@ -2,6 +2,7 @@ package com.example.lumaka.ui.component
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -24,12 +25,14 @@ sealed class NavigationItem(
     val icon: ImageVector,
 ) {
     object Home : NavigationItem(AppScreens.HOME, Icons.Filled.Home)
+    object Bingo : NavigationItem(AppScreens.BINGOBOARD, Icons.Filled.GridView)
     object Profile : NavigationItem(AppScreens.PROFILE, Icons.Filled.Person)
     object Settings : NavigationItem(AppScreens.SETTINGS, Icons.Filled.Settings)
 }
 
 val items = listOf(
     NavigationItem.Home,
+    NavigationItem.Bingo,
     NavigationItem.Profile,
     NavigationItem.Settings
 )
@@ -52,7 +55,13 @@ fun NavigationBar(navController: NavController) {
                     ) 
                 },
                 selected = currentRoute == item.route,
-                onClick = { navController.navigate(item.route) },
+                onClick = {
+                    navController.navigate(item.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    }
+                },
             )
         }
     }

@@ -34,6 +34,9 @@
     <string name="settings_title">Einstellungen</string>
     <string name="settings_notifications">Benachrichtigungen</string>
     <string name="settings_privacy">Datenschutz</string>
+    <string name="settings_bingoboard">Bingoboard</string>
     <string name="settings_logout">Logout</string>
     <string name="settings_privacy_body">Hier steht die Datenschutzerklärung. Dies ist ein Platzhaltertext – bitte ersetzen Sie ihn durch Ihre echten Datenschutzinformationen.</string>
+    <string name="bingoboard_title">Bingoboard</string>
+    <string name="bingoboard_subtitle">Dein spielerisches Board für Challenges. Kommt bald mit echten Daten.</string>
 </resources>

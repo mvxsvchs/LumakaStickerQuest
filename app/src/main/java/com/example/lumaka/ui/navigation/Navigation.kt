@@ -10,5 +10,6 @@ object AppScreens {
     const val PROFILE = "Profile"
     const val SETTINGS = "Settings"
     const val PRIVACY = "Privacy"
+    const val BINGOBOARD = "Bingoboard"
 
 }

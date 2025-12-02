@@ -16,6 +16,7 @@ import com.example.lumaka.ui.feature.home.HomeView
 import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.feature.login.StartView
 import com.example.lumaka.ui.feature.profile.ProfileRoute
+import com.example.lumaka.ui.feature.bingo.BingoBoardView
 import com.example.lumaka.ui.feature.settings.SettingsView
 import com.example.lumaka.ui.feature.settings.PrivacyView
 import com.example.lumaka.ui.feature.register.Register
@@ -63,6 +64,11 @@ fun AppNavigation(
         }
         composable(route = AppScreens.SETTINGS) {
             SettingsView(
+                navController = navController
+            )
+        }
+        composable(route = AppScreens.BINGOBOARD) {
+            BingoBoardView(
                 navController = navController
             )
         }
