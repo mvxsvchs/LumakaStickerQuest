@@ -1,6 +1,7 @@
 package com.example.lumaka.ui.feature.home
 
 import androidx.lifecycle.ViewModel
+import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.domain.model.CategoryEnum
 import com.example.lumaka.domain.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,11 +25,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun toggleTask(id: Int) {
+        val taskBefore = _tasks.value.firstOrNull { it.id == id } ?: return
         _tasks.update { current ->
             current.map { task ->
                 if (task.id == id) task.copy(completed = !task.completed) else task
             }
         }
+        val delta = if (taskBefore.completed) -5 else 5
+        UserSession.addPoints(delta)
     }
 
     fun removeTask(id: Int) {

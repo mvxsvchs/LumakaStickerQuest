@@ -108,15 +108,15 @@ fun ProfileView(
                 ) {
                     ProfileStat(
                         label = stringResource(id = R.string.profile_points),
-                        value = "1 250"
+                        value = (user?.points ?: 0).toString()
                     )
                     ProfileStat(
                         label = stringResource(id = R.string.profile_badges),
-                        value = "5"
+                        value = "-"
                     )
                     ProfileStat(
                         label = stringResource(id = R.string.profile_tasks_completed),
-                        value = "42"
+                        value = "-"
                     )
                 }
             }

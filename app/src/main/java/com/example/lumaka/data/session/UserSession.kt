@@ -11,4 +11,11 @@ object UserSession {
     fun update(user: User?) {
         _user.value = user
     }
+
+    fun addPoints(delta: Int) {
+        _user.value = _user.value?.let { current ->
+            val newPoints = (current.points + delta).coerceAtLeast(0)
+            current.copy(points = newPoints)
+        }
+    }
 }
