@@ -1,27 +1,26 @@
 <resources>
-    <string name="app.name">Lumaka</string>
+    <string name="app_name">Lumaka</string>
 
-    <string name="topbar.title">Lumaka</string>
+    <string name="topbar_title">Lumaka</string>
 
-    <string name="home.no_tasks">Noch keine Aufgaben</string>
-    <string name="home.new_tasks">Neue Aufgabe...</string>
+    <string name="home_no_tasks">Noch keine Aufgaben</string>
+    <string name="home_new_tasks">Neue Aufgabe...</string>
 
+    <string name="login_welcome">Hey! Willkommen bei Lumaka</string>
+    <string name="login_login">Einloggen</string>
+    <string name="login_register">Registrieren</string>
+    <string name="login_username">Benutzername</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Passwort</string>
+    <string name="login_password_confirm">Passwort bestätigen</string>
 
-    <string name="login.welcome">Hey! Willkommen bei Lumaka</string>
-    <string name="login.login">Einloggen</string>
-    <string name="login.register">Registrieren</string>
-    <string name="login.username">Benutzername</string>
-    <string name="login.email">Email</string>
-    <string name="login.password">Passwort</string>
-    <string name="login.password_confirm">Passwort bestätigen</string>
+    <string name="category_all">Alle</string>
+    <string name="category_general">Allgemein</string>
+    <string name="category_work">Arbeit</string>
+    <string name="category_household">Haushalt</string>
+    <string name="category_school">Schule</string>
+    <string name="category_selfcare">Selbstpflege</string>
+    <string name="category_gym">Sport</string>
 
-
-
-    <string name="category.all">Alle</string>
-    <string name="category.general">Allgemein</string>
-    <string name="category.work">Arbeit</string>
-    <string name="category.household">Haushalt</string>
-    <string name="category.school">Schule</string>
-    <string name="category.selfcare">Selbstpflege</string>
-    <string name="category.gym">Sport</string>
+    <string name="home_add_task">Aufgabe hinzufügen</string>
 </resources>

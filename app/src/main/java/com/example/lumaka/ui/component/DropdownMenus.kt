@@ -1,7 +1,10 @@
 package com.example.lumaka.ui.component
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
@@ -34,6 +37,14 @@ fun SelectionDropdownMenu(
         DropdownMenuItem(
             text = { Text(text = stringResource(id = category.title)) },
             onClick = { onItemClick(category.id) },
+            trailingIcon = {
+                if (isSelected.value) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null
+                    )
+                }
+            },
             colors = MenuDefaults.itemColors(
                 textColor = MaterialTheme.colorScheme.onSurface,
             )

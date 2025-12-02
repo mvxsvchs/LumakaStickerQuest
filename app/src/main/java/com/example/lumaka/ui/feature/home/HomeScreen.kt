@@ -1,63 +1,103 @@
 package com.example.lumaka.ui.feature.home
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.animateItemPlacement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.lumaka.ui.theme.*
-import com.example.lumaka.util.rememberPreviewNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
+import kotlin.math.abs
 import com.example.lumaka.R
 import com.example.lumaka.domain.model.CategoryEnum
+import com.example.lumaka.domain.model.Task
 import com.example.lumaka.ui.component.CategoryChip
 import com.example.lumaka.ui.component.NavigationBar
 import com.example.lumaka.ui.component.SelectionDropdownMenu
 import com.example.lumaka.ui.component.TextInputField
 import com.example.lumaka.ui.component.TopBarText
+import com.example.lumaka.ui.theme.LumakaTheme
+import com.example.lumaka.util.rememberPreviewNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(
-    navController: NavController
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val tasks by homeViewModel.tasks.collectAsState()
+    val selectedChipId = remember { mutableIntStateOf(value = 0) }
+    val selectedDropdownId = remember { mutableIntStateOf(value = 0) }
+    val textInputState = remember { mutableStateOf(value = "") }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            val selectedChipId = remember { mutableIntStateOf(value = 0) }
-            val selectedDropdownId = remember { mutableIntStateOf(value = 0) }
-            val textInputState = remember { mutableStateOf(value = "") }
-
             Column {
                 TopBarText()
                 ChipsSelection(selectedChipId = selectedChipId)
-                InputRow(textInputState = textInputState, selectedDropdownId = selectedDropdownId)
+                InputRow(
+                    textInputState = textInputState,
+                    selectedDropdownId = selectedDropdownId,
+                    homeViewModel = homeViewModel
+                )
             }
         },
         bottomBar = {
             NavigationBar(navController = navController)
         }
     ) { padding ->
-        EmptyState(padding = padding)
+        TaskList(
+            padding = padding,
+            tasks = tasks,
+            selectedCategoryId = selectedChipId.intValue,
+            onToggle = { id -> homeViewModel.toggleTask(id) },
+            onDelete = { id -> homeViewModel.removeTask(id) },
+            onMove = { id, delta -> homeViewModel.moveTask(id, delta) }
+        )
     }
 }
 
@@ -86,7 +126,11 @@ private fun ChipsSelection(selectedChipId: MutableIntState) {
 }
 
 @Composable
-private fun InputRow(textInputState: MutableState<String>, selectedDropdownId: MutableIntState) {
+private fun InputRow(
+    textInputState: MutableState<String>,
+    selectedDropdownId: MutableIntState,
+    homeViewModel: HomeViewModel
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -105,6 +149,19 @@ private fun InputRow(textInputState: MutableState<String>, selectedDropdownId: M
             placeholder = R.string.home_new_tasks,
 
         )
+
+        IconButton(
+            onClick = {
+                val category = CategoryEnum.entries.find { it.id == selectedDropdownId.intValue } ?: CategoryEnum.ALL
+                homeViewModel.addTask(title = textInputState.value, category = category)
+                textInputState.value = ""
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(id = R.string.home_add_task)
+            )
+        }
     }
 }
 
@@ -159,23 +216,160 @@ private fun DropdownSelection(selectedDropdownId: MutableIntState) {
 }
 
 @Composable
-private fun EmptyState(padding: PaddingValues) {
-    Column(
+private fun TaskList(
+    padding: PaddingValues,
+    tasks: List<Task>,
+    selectedCategoryId: Int,
+    onToggle: (Int) -> Unit,
+    onDelete: (Int) -> Unit,
+    onMove: (Int, Int) -> Unit
+) {
+    val visibleTasks = remember(tasks, selectedCategoryId) {
+        tasks.filter { selectedCategoryId == 0 || it.category.id == selectedCategoryId }
+    }
+
+    if (visibleTasks.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.home_no_tasks),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        return
+    }
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        items(items = visibleTasks, key = { it.id }) { task ->
+            val scope = rememberCoroutineScope()
+            val offsetX = remember { Animatable(0f) }
+            val offsetY = remember { Animatable(0f) }
+            val dragY = remember { mutableStateOf(0f) }
+            val alpha by animateFloatAsState(
+                targetValue = if (abs(offsetX.value) > 20f) 0.7f else 1f,
+                animationSpec = tween(durationMillis = 150),
+                label = "swipe alpha"
+            )
+            var dragMode by remember { mutableStateOf<DragMode?>(null) }
 
-        Text(
-            text = stringResource(id = R.string.home_no_tasks),
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        translationX = offsetX.value
+                        translationY = offsetY.value
+                        this.alpha = alpha
+                    }
+                    .pointerInput(task.id) {
+                        detectDragGestures(
+                            onDragStart = {
+                                dragMode = null
+                                dragY.value = 0f
+                            },
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                if (dragMode == null) {
+                                    dragMode = if (abs(dragAmount.x) > abs(dragAmount.y)) DragMode.Horizontal else DragMode.Vertical
+                                }
+                                when (dragMode) {
+                                    DragMode.Horizontal -> {
+                                        scope.launch {
+                                            offsetX.snapTo(offsetX.value + dragAmount.x)
+                                        }
+                                    }
+                                    DragMode.Vertical -> {
+                                        dragY.value += dragAmount.y
+                                        scope.launch {
+                                            offsetY.snapTo(offsetY.value + dragAmount.y)
+                                        }
+                                    }
+                                    null -> Unit
+                                }
+                            },
+                            onDragEnd = {
+                                when (dragMode) {
+                                    DragMode.Horizontal -> {
+                                        val current = offsetX.value
+                                        if (abs(current) > 120f) {
+                                            val target = if (current > 0) 800f else -800f
+                                            scope.launch {
+                                                offsetX.animateTo(target, tween(200))
+                                                onDelete(task.id)
+                                                offsetX.snapTo(0f)
+                                            }
+                                        } else {
+                                            scope.launch { offsetX.animateTo(0f, tween(180)) }
+                                        }
+                                    }
+                                    DragMode.Vertical -> {
+                                        when {
+                                            dragY.value > 40f -> onMove(task.id, 1)
+                                            dragY.value < -40f -> onMove(task.id, -1)
+                                        }
+                                        dragY.value = 0f
+                                        scope.launch { offsetY.animateTo(0f, tween(180)) }
+                                    }
+                                    null -> Unit
+                                }
+                                dragMode = null
+                            },
+                            onDragCancel = {
+                                dragMode = null
+                                dragY.value = 0f
+                                scope.launch {
+                                    offsetX.animateTo(0f, tween(180))
+                                    offsetY.animateTo(0f, tween(180))
+                                }
+                            }
+                        )
+                    },
+                tonalElevation = 2.dp,
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(id = task.category.title),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = task.title,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    Checkbox(
+                        checked = task.completed,
+                        onCheckedChange = { onToggle(task.id) }
+                    )
+                }
+            }
+        }
     }
 }
+
+private enum class DragMode { Horizontal, Vertical }
 
 
 @Preview(name = "Home Light", showBackground = true)
@@ -183,7 +377,7 @@ private fun EmptyState(padding: PaddingValues) {
 private fun HomeScreenPreviewLight() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        HomeView(previewNavController)
+        HomeView(previewNavController, homeViewModel = HomeViewModel())
     }
 }
 
@@ -192,6 +386,6 @@ private fun HomeScreenPreviewLight() {
 private fun HomeScreenPreviewDark() {
     val previewNavController = rememberPreviewNavController()
     LumakaTheme {
-        HomeView(previewNavController)
+        HomeView(previewNavController, homeViewModel = HomeViewModel())
     }
 }
