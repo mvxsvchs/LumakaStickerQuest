@@ -22,6 +22,8 @@ import com.example.lumaka.ui.feature.settings.PrivacyView
 import com.example.lumaka.ui.feature.register.Register
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
+import com.example.lumaka.data.session.UserSession
+import androidx.compose.runtime.collectAsState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,7 +48,10 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.START) {
+    val currentUser = UserSession.user.collectAsState()
+    val startDestination = if (currentUser.value != null) AppScreens.HOME else AppScreens.START
+
+    NavHost(navController = navController, startDestination = startDestination) {
         composable(route = AppScreens.START) {
             StartView(
                 navController = navController,

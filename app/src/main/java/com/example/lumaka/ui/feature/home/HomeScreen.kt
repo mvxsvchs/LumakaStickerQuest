@@ -406,7 +406,10 @@ private fun HomeScreenPreviewLight() {
             override suspend fun getUserById(userid: Int): UserDTO? = null
             override suspend fun updatePoints(pointsDTO: PointsDTO) {}
         }
-        HomeViewModel(com.example.lumaka.data.repository.PointsRepository(context, dummyApi))
+        HomeViewModel(
+            pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+        )
     }
     LumakaTheme {
         HomeView(previewNavController, homeViewModel = previewVm)
@@ -425,7 +428,10 @@ private fun HomeScreenPreviewDark() {
             override suspend fun getUserById(userid: Int): UserDTO? = null
             override suspend fun updatePoints(pointsDTO: PointsDTO) {}
         }
-        HomeViewModel(com.example.lumaka.data.repository.PointsRepository(context, dummyApi))
+        HomeViewModel(
+            pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+        )
     }
     LumakaTheme {
         HomeView(previewNavController, homeViewModel = previewVm)

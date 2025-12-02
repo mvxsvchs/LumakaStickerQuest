@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.PointsRepository
+import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.domain.model.Login
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import kotlin.math.max
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val pointsRepository: PointsRepository
+    private val pointsRepository: PointsRepository,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
 
     data class LoginUiState(
@@ -46,6 +48,7 @@ class LoginViewModel @Inject constructor(
                     val mergedPoints = max(loginResult.points, storedPoints)
                     val userWithPoints = loginResult.copy(points = mergedPoints)
                     UserSession.update(userWithPoints)
+                    sessionRepository.saveUser(userWithPoints)
                     pointsRepository.setPoints(effectiveEmail, mergedPoints)
                     LoginUiState(isSuccess = true)
                 }

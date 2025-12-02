@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.session.UserSession
+import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.domain.model.CategoryEnum
 import com.example.lumaka.domain.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val pointsRepository: PointsRepository
+    private val pointsRepository: PointsRepository,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
 
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
@@ -39,8 +41,10 @@ class HomeViewModel @Inject constructor(
         val currentUser = UserSession.user.value
         if (currentUser != null) {
             val newPoints = (currentUser.points + delta).coerceAtLeast(0)
-            UserSession.update(currentUser.copy(points = newPoints))
+            val updatedUser = currentUser.copy(points = newPoints)
+            UserSession.update(updatedUser)
             viewModelScope.launch {
+                sessionRepository.saveUser(updatedUser)
                 pointsRepository.setPoints(currentUser.email, newPoints)
             }
         }

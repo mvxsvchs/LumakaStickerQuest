@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.PointsRepository
+import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.domain.model.Registration
 import com.example.lumaka.domain.model.User
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val pointsRepository: PointsRepository
+    private val pointsRepository: PointsRepository,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
     enum class RegisterError { PASSWORD_MISMATCH, REQUIRED_FIELDS, GENERIC }
 
@@ -56,6 +58,7 @@ class RegisterViewModel @Inject constructor(
                             email = trimmedEmail,
                         )
                         UserSession.update(user)
+                        sessionRepository.saveUser(user)
                         pointsRepository.setPoints(trimmedEmail, 0)
                         RegisterUiState(isSuccess = true)
                     }
