@@ -16,15 +16,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.lumaka.ui.navigation.AppScreens
 
 
 sealed class NavigationItem(
     val route: String,
     val icon: ImageVector,
 ) {
-    object Home : NavigationItem("home", Icons.Filled.Home)
-    object Profile : NavigationItem("profile", Icons.Filled.Person,)
-    object Settings : NavigationItem("settings", Icons.Filled.Settings,)
+    object Home : NavigationItem(AppScreens.HOME, Icons.Filled.Home)
+    object Profile : NavigationItem(AppScreens.PROFILE, Icons.Filled.Person)
+    object Settings : NavigationItem(AppScreens.SETTINGS, Icons.Filled.Settings)
 }
 
 val items = listOf(

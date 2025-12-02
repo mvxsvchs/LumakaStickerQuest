@@ -7,5 +7,7 @@ object AppScreens {
     const val START = "Start"
     const val LOGIN = "Login"
     const val REGISTER = "Register"
+    const val PROFILE = "Profile"
+    const val SETTINGS = "Settings"
 
 }

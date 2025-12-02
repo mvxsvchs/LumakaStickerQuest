@@ -5,4 +5,5 @@ data class User(
     val userid: Int,
     val points: Int,
     val stickerid: List<Int>,
+    val email: String = "",
 )

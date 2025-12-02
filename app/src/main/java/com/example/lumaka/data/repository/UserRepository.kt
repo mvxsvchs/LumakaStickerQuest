@@ -11,13 +11,21 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor(private val api: QuestService) {
-    suspend fun registerUser(registration: Registration) {
-        api.registerUser(register = registration.toDTO())
+    suspend fun registerUser(registration: Registration): Boolean {
+        return try {
+            api.registerUser(register = registration.toDTO())
+            true
+        } catch (t: Throwable) {
+            false
+        }
     }
 
-    suspend fun loginUser(login: Login): Boolean {
-        val result = api.loginUser(login = login.toDTO())
-        return result != null
+    suspend fun loginUser(login: Login): User? {
+        return try {
+            api.loginUser(login = login.toDTO())?.toDomain(fallbackEmail = login.mail)
+        } catch (t: Throwable) {
+            null
+        }
     }
 
     suspend fun getUserById(userId: Int): User? {

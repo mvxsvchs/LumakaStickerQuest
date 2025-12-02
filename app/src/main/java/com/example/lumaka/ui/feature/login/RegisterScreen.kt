@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,14 @@ fun Register(
     var username by remember { mutableStateOf(value = "") }
     var email by remember { mutableStateOf(value = "") }
     var password by remember { mutableStateOf(value = "") }
+    var confirmPassword by remember { mutableStateOf(value = "") }
+    val uiState by registerViewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            navController.navigate(route = AppScreens.START)
+        }
+    }
 
     Scaffold(
         modifier = Modifier,
@@ -84,24 +93,37 @@ fun Register(
                 )
                 TextInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    currentText = password,
-                    onTextChange = { password = it },
+                    currentText = confirmPassword,
+                    onTextChange = { confirmPassword = it },
                     placeholder = R.string.login_password_confirm,
                     shouldHideText = true,
                 )
+                val error = uiState.error
+                if (error != null) {
+                    Text(
+                        text = when (error) {
+                            RegisterViewModel.RegisterError.PASSWORD_MISMATCH -> stringResource(id = R.string.register_error_password_mismatch)
+                            RegisterViewModel.RegisterError.REQUIRED_FIELDS -> stringResource(id = R.string.register_error_required_fields)
+                            RegisterViewModel.RegisterError.GENERIC -> stringResource(id = R.string.register_error_generic)
+                        },
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
                 TextButton(
                     modifier = Modifier
                         .defaultMinSize(minHeight = 48.dp)
                         .fillMaxWidth(),
                     textId = R.string.login_register,
                     onClick = {
-                        navController.navigate(route = AppScreens.START)
                         registerViewModel.onRegister(
                             username = username,
                             email = email,
-                            password = password
+                            password = password,
+                            confirmPassword = confirmPassword,
                         )
-                    }
+                    },
+                    enabled = !uiState.isLoading,
                 )
             }
         }

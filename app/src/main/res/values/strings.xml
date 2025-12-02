@@ -12,7 +12,7 @@
     <string name="login_username">Benutzername</string>
     <string name="login_email">Email</string>
     <string name="login_password">Passwort</string>
-    <string name="login_password_confirm">Passwort bestätigen</string>
+    <string name="login_password_confirm">Passwort bestдigen</string>
 
     <string name="category_all">Alle</string>
     <string name="category_general">Allgemein</string>
@@ -22,5 +22,17 @@
     <string name="category_selfcare">Selbstpflege</string>
     <string name="category_gym">Sport</string>
 
-    <string name="home_add_task">Aufgabe hinzufügen</string>
+    <string name="home_add_task">Aufgabe hinzuf“en</string>
+    <string name="login_error_invalid">Email oder Passwort ist falsch</string>
+    <string name="register_error_password_mismatch">Passwörter stimmen nicht überein</string>
+    <string name="register_error_required_fields">Alle Felder sind erforderlich</string>
+    <string name="register_error_generic">Registrierung fehlgeschlagen, bitte erneut versuchen</string>
+    <string name="profile_title">Profil</string>
+    <string name="profile_points">Punkte</string>
+    <string name="profile_badges">Abzeichen</string>
+    <string name="profile_tasks_completed">Aufgaben erledigt</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_notifications">Benachrichtigungen</string>
+    <string name="settings_privacy">Datenschutz</string>
+    <string name="settings_logout">Logout</string>
 </resources>

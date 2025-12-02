@@ -15,6 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.lumaka.ui.feature.home.HomeView
 import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.feature.login.StartView
+import com.example.lumaka.ui.feature.profile.ProfileRoute
+import com.example.lumaka.ui.feature.settings.SettingsView
 import com.example.lumaka.ui.feature.register.Register
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
@@ -51,6 +53,16 @@ fun AppNavigation(
         composable(route = AppScreens.HOME) {
             HomeView(
                 navController = navController,
+            )
+        }
+        composable(route = AppScreens.PROFILE) {
+            ProfileRoute(
+                navController = navController
+            )
+        }
+        composable(route = AppScreens.SETTINGS) {
+            SettingsView(
+                navController = navController
             )
         }
         composable(route = AppScreens.LOGIN) {
