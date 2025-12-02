@@ -3,17 +3,20 @@ package com.example.lumaka.ui.feature.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.UserRepository
+import com.example.lumaka.data.repository.PointsRepository
+import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.domain.model.Login
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.lumaka.data.session.UserSession
+import kotlin.math.max
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val pointsRepository: PointsRepository
 ) : ViewModel() {
 
     data class LoginUiState(
@@ -38,7 +41,12 @@ class LoginViewModel @Inject constructor(
             } else null
             _uiState.value = when {
                 loginResult != null -> {
-                    UserSession.update(loginResult)
+                    val effectiveEmail = loginResult.email.ifBlank { loweredEmail }
+                    val storedPoints = pointsRepository.getPoints(effectiveEmail)
+                    val mergedPoints = max(loginResult.points, storedPoints)
+                    val userWithPoints = loginResult.copy(points = mergedPoints)
+                    UserSession.update(userWithPoints)
+                    pointsRepository.setPoints(effectiveEmail, mergedPoints)
                     LoginUiState(isSuccess = true)
                 }
                 else -> LoginUiState(errorMessageId = com.example.lumaka.R.string.login_error_invalid)

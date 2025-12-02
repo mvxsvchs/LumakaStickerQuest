@@ -3,6 +3,7 @@ package com.example.lumaka.ui.feature.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.UserRepository
+import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.domain.model.Registration
 import com.example.lumaka.domain.model.User
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val pointsRepository: PointsRepository
 ) : ViewModel() {
     enum class RegisterError { PASSWORD_MISMATCH, REQUIRED_FIELDS, GENERIC }
 
@@ -46,15 +48,15 @@ class RegisterViewModel @Inject constructor(
             _uiState.update {
                 when {
                     success -> {
-                        UserSession.update(
-                            User(
-                                username = trimmedUsername,
-                                userid = 0,
-                                points = 0,
-                                stickerid = emptyList(),
-                                email = trimmedEmail,
-                            )
+                        val user = User(
+                            username = trimmedUsername,
+                            userid = 0,
+                            points = 0,
+                            stickerid = emptyList(),
+                            email = trimmedEmail,
                         )
+                        UserSession.update(user)
+                        pointsRepository.setPoints(trimmedEmail, 0)
                         RegisterUiState(isSuccess = true)
                     }
                     else -> RegisterUiState(error = RegisterError.GENERIC)

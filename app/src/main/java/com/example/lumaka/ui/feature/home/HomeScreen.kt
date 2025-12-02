@@ -49,6 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.lumaka.data.remote.api.QuestService
+import com.example.lumaka.data.remote.dto.LoginDTO
+import com.example.lumaka.data.remote.dto.PointsDTO
+import com.example.lumaka.data.remote.dto.RegisterDTO
+import com.example.lumaka.data.remote.dto.UserDTO
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import com.example.lumaka.R
@@ -393,8 +398,18 @@ private enum class DragMode { Horizontal, Vertical }
 @Composable
 private fun HomeScreenPreviewLight() {
     val previewNavController = rememberPreviewNavController()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val previewVm = remember {
+        val dummyApi = object : QuestService {
+            override suspend fun registerUser(register: RegisterDTO) {}
+            override suspend fun loginUser(login: LoginDTO): UserDTO? = null
+            override suspend fun getUserById(userid: Int): UserDTO? = null
+            override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+        }
+        HomeViewModel(com.example.lumaka.data.repository.PointsRepository(context, dummyApi))
+    }
     LumakaTheme {
-        HomeView(previewNavController, homeViewModel = HomeViewModel())
+        HomeView(previewNavController, homeViewModel = previewVm)
     }
 }
 
@@ -402,7 +417,17 @@ private fun HomeScreenPreviewLight() {
 @Composable
 private fun HomeScreenPreviewDark() {
     val previewNavController = rememberPreviewNavController()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val previewVm = remember {
+        val dummyApi = object : QuestService {
+            override suspend fun registerUser(register: RegisterDTO) {}
+            override suspend fun loginUser(login: LoginDTO): UserDTO? = null
+            override suspend fun getUserById(userid: Int): UserDTO? = null
+            override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+        }
+        HomeViewModel(com.example.lumaka.data.repository.PointsRepository(context, dummyApi))
+    }
     LumakaTheme {
-        HomeView(previewNavController, homeViewModel = HomeViewModel())
+        HomeView(previewNavController, homeViewModel = previewVm)
     }
 }

@@ -22,7 +22,7 @@
     <string name="category_selfcare">Selbstpflege</string>
     <string name="category_gym">Sport</string>
 
-    <string name="home_add_task">Aufgabe hinzuf“en</string>
+    <string name="home_add_task">Aufgabe hinzufüen</string>
     <string name="login_error_invalid">Email oder Passwort ist falsch</string>
     <string name="register_error_password_mismatch">Passwörter stimmen nicht überein</string>
     <string name="register_error_required_fields">Alle Felder sind erforderlich</string>
