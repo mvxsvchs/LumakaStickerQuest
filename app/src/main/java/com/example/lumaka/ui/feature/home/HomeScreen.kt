@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.animateItemPlacement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -320,7 +319,15 @@ private fun TaskList(
                                             dragY.value < -40f -> onMove(task.id, -1)
                                         }
                                         dragY.value = 0f
-                                        scope.launch { offsetY.animateTo(0f, tween(180)) }
+                                        scope.launch {
+                                            offsetY.animateTo(
+                                                targetValue = 0f,
+                                                animationSpec = spring(
+                                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                    stiffness = Spring.StiffnessLow
+                                                )
+                                            )
+                                        }
                                     }
                                     null -> Unit
                                 }
@@ -331,7 +338,13 @@ private fun TaskList(
                                 dragY.value = 0f
                                 scope.launch {
                                     offsetX.animateTo(0f, tween(180))
-                                    offsetY.animateTo(0f, tween(180))
+                                    offsetY.animateTo(
+                                        targetValue = 0f,
+                                        animationSpec = spring(
+                                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                                            stiffness = Spring.StiffnessLow
+                                        )
+                                    )
                                 }
                             }
                         )
