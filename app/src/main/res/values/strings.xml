@@ -22,9 +22,9 @@
     <string name="category_selfcare">Selbstpflege</string>
     <string name="category_gym">Sport</string>
 
-    <string name="home_add_task">Aufgabe hinzufuegen</string>
+    <string name="home_add_task">Aufgabe hinzufügen</string>
     <string name="login_error_invalid">Email oder Passwort ist falsch</string>
-    <string name="register_error_password_mismatch">Passwoerter stimmen nicht ueberein</string>
+    <string name="register_error_password_mismatch">Passwoerter stimmen nicht überein</string>
     <string name="register_error_required_fields">Alle Felder sind erforderlich</string>
     <string name="register_error_generic">Registrierung fehlgeschlagen, bitte erneut versuchen</string>
     <string name="profile_title">Profil</string>
@@ -36,12 +36,12 @@
     <string name="settings_privacy">Datenschutz</string>
     <string name="settings_bingoboard">Bingoboard</string>
     <string name="settings_logout">Logout</string>
-    <string name="settings_privacy_body">Hier steht die Datenschutzerklaerung. Dies ist ein Platzhaltertext - bitte ersetzen Sie ihn durch Ihre echten Datenschutzinformationen.</string>
+    <string name="settings_privacy_body">Hier steht die Datenschutzerklaerung. Dies ist ein Platzhaltertext - bitte ersetzen Sie ihn durch eine echte Datenschutzinformation.</string>
 
     <string name="bingoboard_title">Bingoboard</string>
-    <string name="bingoboard_subtitle">Kaufe ein zufaelliges Feld fuer 10 Punkte und erhalte einen zufaelligen Sticker.</string>
-    <string name="bingoboard_action_buy">Zufaelliges Feld kaufen (-10 Punkte)</string>
-    <string name="bingoboard_points_available">Verfuegbare Punkte: %1$d</string>
+    <string name="bingoboard_subtitle">Kaufe ein zufälliges Feld für 10 Punkte und erhalte einen zufälligen Sticker.</string>
+    <string name="bingoboard_action_buy">Zufälliges Feld kaufen (-10 Punkte)</string>
+    <string name="bingoboard_points_available">Verfügbare Punkte: %1$d</string>
     <string name="bingoboard_not_enough_points">Du brauchst mindestens 10 Punkte.</string>
     <string name="bingoboard_locked_finished">Alle Felder sind bereits freigeschaltet.</string>
     <string name="bingoboard_reward">Sticker %1$s erhalten!</string>
