@@ -203,7 +203,7 @@ private fun DropdownSelection(selectedDropdownId: MutableIntState) {
             Icon(
                 modifier = Modifier.padding(end = 8.dp),
                 imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Dropdown Icon"
+                contentDescription = stringResource(id = R.string.home_dropdown_icon)
             )
         }
 

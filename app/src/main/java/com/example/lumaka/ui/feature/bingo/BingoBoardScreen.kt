@@ -235,15 +235,15 @@ private fun BingoPreviewLight() {
     val previewNavController = rememberPreviewNavController()
     val sampleState = BingoUiState(
         cells = listOf(
-            BingoCell(0, "Feld 1", unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
-            BingoCell(1, "Feld 2"),
-            BingoCell(2, "Feld 3"),
-            BingoCell(3, "Feld 4"),
-            BingoCell(4, "Feld 5", unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
-            BingoCell(5, "Feld 6"),
-            BingoCell(6, "Feld 7"),
-            BingoCell(7, "Feld 8"),
-            BingoCell(8, "Feld 9")
+            BingoCell(0, stringResource(id = R.string.bingo_cell_title, 1), unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(1, stringResource(id = R.string.bingo_cell_title, 2)),
+            BingoCell(2, stringResource(id = R.string.bingo_cell_title, 3)),
+            BingoCell(3, stringResource(id = R.string.bingo_cell_title, 4)),
+            BingoCell(4, stringResource(id = R.string.bingo_cell_title, 5), unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(5, stringResource(id = R.string.bingo_cell_title, 6)),
+            BingoCell(6, stringResource(id = R.string.bingo_cell_title, 7)),
+            BingoCell(7, stringResource(id = R.string.bingo_cell_title, 8)),
+            BingoCell(8, stringResource(id = R.string.bingo_cell_title, 9))
         )
     )
     LumakaTheme {
@@ -263,15 +263,15 @@ private fun BingoPreviewDark() {
     val previewNavController = rememberPreviewNavController()
     val sampleState = BingoUiState(
         cells = listOf(
-            BingoCell(0, "Feld 1", unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
-            BingoCell(1, "Feld 2"),
-            BingoCell(2, "Feld 3"),
-            BingoCell(3, "Feld 4"),
-            BingoCell(4, "Feld 5", unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
-            BingoCell(5, "Feld 6"),
-            BingoCell(6, "Feld 7"),
-            BingoCell(7, "Feld 8"),
-            BingoCell(8, "Feld 9", unlocked = true, stickerResId = R.drawable.sticker_skzoo_02)
+            BingoCell(0, stringResource(id = R.string.bingo_cell_title, 1), unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(1, stringResource(id = R.string.bingo_cell_title, 2)),
+            BingoCell(2, stringResource(id = R.string.bingo_cell_title, 3)),
+            BingoCell(3, stringResource(id = R.string.bingo_cell_title, 4)),
+            BingoCell(4, stringResource(id = R.string.bingo_cell_title, 5), unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(5, stringResource(id = R.string.bingo_cell_title, 6)),
+            BingoCell(6, stringResource(id = R.string.bingo_cell_title, 7)),
+            BingoCell(7, stringResource(id = R.string.bingo_cell_title, 8)),
+            BingoCell(8, stringResource(id = R.string.bingo_cell_title, 9), unlocked = true, stickerResId = R.drawable.sticker_skzoo_02)
         )
     )
     LumakaTheme {

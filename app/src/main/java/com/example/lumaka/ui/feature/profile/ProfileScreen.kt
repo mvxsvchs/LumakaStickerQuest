@@ -99,7 +99,7 @@ fun ProfileView(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = user?.email ?: "lumaka@example.com",
+                        text = user?.email ?: stringResource(id = R.string.profile_email_placeholder),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

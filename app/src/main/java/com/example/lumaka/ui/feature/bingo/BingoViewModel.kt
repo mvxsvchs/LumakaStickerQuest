@@ -1,14 +1,15 @@
 package com.example.lumaka.ui.feature.bingo
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lumaka.R
+import com.example.lumaka.data.repository.BingoBoardRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
-import com.example.lumaka.R
-import com.example.lumaka.ui.feature.bingo.StickerAssets
-import com.example.lumaka.data.repository.BingoBoardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,9 +32,7 @@ data class BingoCell(
 )
 
 data class BingoUiState(
-    val cells: List<BingoCell> = (0 until 9).map { index ->
-        BingoCell(id = index, title = "Feld ${index + 1}")
-    },
+    val cells: List<BingoCell> = emptyList(),
     val lastSticker: String? = null,
     val message: String? = null,
     val weekKey: String = currentWeekKey()
@@ -44,6 +43,7 @@ data class BingoUiState(
 private data class Sticker(val name: String, val resId: Int, val id: Int)
 @HiltViewModel
 class BingoViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
     private val bingoBoardRepository: BingoBoardRepository
@@ -62,7 +62,7 @@ class BingoViewModel @Inject constructor(
         }
     }
 
-    private val _uiState = MutableStateFlow(BingoUiState())
+    private val _uiState = MutableStateFlow(BingoUiState(cells = defaultCells()))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -71,7 +71,7 @@ class BingoViewModel @Inject constructor(
                 .map { it?.email?.lowercase().orEmpty() }
                 .distinctUntilChanged()
                 .collectLatest { email ->
-                    loadFromStorage(email.ifBlank { null })
+                loadFromStorage(email.ifBlank { null })
             }
         }
     }
@@ -80,7 +80,7 @@ class BingoViewModel @Inject constructor(
         val currentKey = currentWeekKey()
         if (_uiState.value.weekKey != currentKey) {
             _uiState.update {
-                BingoUiState(weekKey = currentKey)
+                BingoUiState(cells = defaultCells(), weekKey = currentKey)
             }
             viewModelScope.launch { persistState(currentUserEmail()) }
         }
@@ -89,22 +89,22 @@ class BingoViewModel @Inject constructor(
     fun purchaseRandomCell() {
         ensureWeekIsCurrent()
         val currentUser = UserSession.user.value ?: run {
-            _uiState.update { it.copy(message = "Bitte einloggen, um zu spielen.") }
+            _uiState.update { it.copy(message = context.getString(R.string.bingo_message_login_required)) }
             return
         }
         val ownedStickerIds = currentUser.stickerid.toSet()
         val availableStickers = stickerPool.filterNot { it.id in ownedStickerIds }
         if (availableStickers.isEmpty()) {
-            _uiState.update { it.copy(message = "Alle Sticker bereits gesammelt.") }
+            _uiState.update { it.copy(message = context.getString(R.string.bingo_message_all_collected)) }
             return
         }
         val lockedCells = _uiState.value.cells.filter { !it.unlocked }
         if (lockedCells.isEmpty()) {
-            _uiState.update { it.copy(message = "Alle Felder sind bereits freigeschaltet.") }
+            _uiState.update { it.copy(message = context.getString(R.string.bingo_message_all_unlocked)) }
             return
         }
         if (currentUser.points < BINGO_COST) {
-            _uiState.update { it.copy(message = "Nicht genug Punkte (10 noetig).") }
+            _uiState.update { it.copy(message = context.getString(R.string.bingo_message_not_enough_points)) }
             return
         }
 
@@ -132,14 +132,13 @@ class BingoViewModel @Inject constructor(
         }
     }
 
-    private fun baseCells(): List<BingoCell> =
-        (0 until 9).map { index -> BingoCell(id = index, title = "Feld ${index + 1}") }
+    private fun baseCells(): List<BingoCell> = defaultCells()
 
     private suspend fun loadFromStorage(userEmail: String?) {
         val currentWeek = currentWeekKey()
         val email = userEmail?.takeIf { it.isNotBlank() }
         if (email == null) {
-            _uiState.value = BingoUiState(weekKey = currentWeek)
+            _uiState.value = BingoUiState(cells = defaultCells(), weekKey = currentWeek)
             return
         }
         val snapshot = bingoBoardRepository.loadBoard(email)
@@ -158,7 +157,7 @@ class BingoViewModel @Inject constructor(
                 weekKey = boardWeek
             )
         } else {
-            _uiState.value = BingoUiState(weekKey = currentWeek)
+            _uiState.value = BingoUiState(cells = defaultCells(), weekKey = currentWeek)
             persistState(email)
         }
     }
@@ -184,6 +183,11 @@ class BingoViewModel @Inject constructor(
     }
 
     private fun currentUserEmail(): String? = UserSession.user.value?.email
+
+    private fun defaultCells(): List<BingoCell> =
+        (0 until 9).map { index ->
+            BingoCell(id = index, title = context.getString(R.string.bingo_cell_title, index + 1))
+        }
 
     private fun unlocksBingo(cells: List<BingoCell>): Boolean {
         val grid = cells.sortedBy { it.id }.map { it.unlocked }

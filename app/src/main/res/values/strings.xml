@@ -63,4 +63,14 @@
     <string name="shop_set_comfy_desc">12 gemütliche Sticker im Pastell-Look.</string>
     <string name="shop_set_energy">Energy Pack</string>
     <string name="shop_set_energy_desc">12 energetische Sticker mit Neon-Akzenten.</string>
+
+    <string name="bingo_message_login_required">Bitte einloggen, um zu spielen.</string>
+    <string name="bingo_message_all_collected">Alle Sticker bereits gesammelt.</string>
+    <string name="bingo_message_all_unlocked">Alle Felder sind bereits freigeschaltet.</string>
+    <string name="bingo_message_not_enough_points">Nicht genug Punkte (10 noetig).</string>
+    <string name="bingo_cell_title">Feld %1$d</string>
+
+    <string name="home_dropdown_icon">Dropdown Icon</string>
+
+    <string name="profile_email_placeholder">lumaka@example.com</string>
 </resources>
