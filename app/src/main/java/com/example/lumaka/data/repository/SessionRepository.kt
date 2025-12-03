@@ -17,11 +17,13 @@ class SessionRepository @Inject constructor(
             prefs.edit().clear().apply()
             return
         }
+        val stickerString = user.stickerid.joinToString(separator = ",")
         prefs.edit()
             .putString("username", user.username)
             .putString("email", user.email)
             .putInt("userid", user.userid)
             .putInt("points", user.points)
+            .putString("sticker_ids", stickerString)
             .apply()
     }
 
@@ -30,11 +32,16 @@ class SessionRepository @Inject constructor(
         val username = prefs.getString("username", "") ?: ""
         val userid = prefs.getInt("userid", 0)
         val points = prefs.getInt("points", 0)
+        val stickerString = prefs.getString("sticker_ids", "") ?: ""
+        val stickerIds = stickerString
+            .split(",")
+            .mapNotNull { it.toIntOrNull() }
+            .filter { it > 0 }
         return User(
             username = username,
             userid = userid,
             points = points,
-            stickerid = emptyList(),
+            stickerid = stickerIds,
             email = email
         )
     }

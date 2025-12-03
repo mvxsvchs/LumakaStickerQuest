@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.temporal.WeekFields
 
 private const val BINGO_COST = 10
 
@@ -19,7 +22,6 @@ data class BingoCell(
     val id: Int,
     val title: String,
     val unlocked: Boolean = false,
-    val stickerName: String? = null,
     val stickerResId: Int? = null
 )
 
@@ -28,34 +30,72 @@ data class BingoUiState(
         BingoCell(id = index, title = "Feld ${index + 1}")
     },
     val lastSticker: String? = null,
-    val message: String? = null
+    val message: String? = null,
+    val weekKey: String = currentWeekKey()
 ) {
     val remainingLocked: Int get() = cells.count { !it.unlocked }
 }
 
 private data class Sticker(val name: String, val resId: Int, val id: Int)
-
 @HiltViewModel
 class BingoViewModel @Inject constructor(
     private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository
 ) : ViewModel() {
 
-    private val stickerPool = listOf(
-        Sticker("Red Panda 1", R.drawable.sticker_redpanda_01, id = 1),
-        Sticker("Red Panda 2", R.drawable.sticker_redpanda_02, id = 2),
-        Sticker("Red Panda 3", R.drawable.sticker_redpanda_03, id = 3),
-        Sticker("Skzoo 1", R.drawable.sticker_skzoo_01, id = 101),
-        Sticker("Skzoo 2", R.drawable.sticker_skzoo_02, id = 102),
-        Sticker("Skzoo 3", R.drawable.sticker_skzoo_03, id = 103),
-    )
+    private val stickerPool: List<Sticker> = buildList {
+        (1..29).forEach { idx ->
+            add(
+                Sticker(
+                    name = "Red Panda $idx",
+                    resId = resourceId("sticker_redpanda_%02d", idx),
+                    id = idx
+                )
+            )
+        }
+        (1..31).forEach { idx ->
+            add(
+                Sticker(
+                    name = "Skzoo $idx",
+                    resId = resourceId("sticker_skzoo_%02d", idx),
+                    id = 100 + idx
+                )
+            )
+        }
+    }.filter { it.resId != 0 }
 
     private val _uiState = MutableStateFlow(BingoUiState())
     val uiState = _uiState.asStateFlow()
 
+    private fun resourceId(pattern: String, idx: Int): Int {
+        val name = pattern.format(idx)
+        val res = R.drawable::class.java
+        return try {
+            res.getField(name).getInt(res)
+        } catch (_: Throwable) {
+            0
+        }
+    }
+
+    fun ensureWeekIsCurrent() {
+        val currentKey = currentWeekKey()
+        if (_uiState.value.weekKey != currentKey) {
+            _uiState.update {
+                BingoUiState(weekKey = currentKey)
+            }
+        }
+    }
+
     fun purchaseRandomCell() {
+        ensureWeekIsCurrent()
         val currentUser = UserSession.user.value ?: run {
             _uiState.update { it.copy(message = "Bitte einloggen, um zu spielen.") }
+            return
+        }
+        val ownedStickerIds = currentUser.stickerid.toSet()
+        val availableStickers = stickerPool.filterNot { it.id in ownedStickerIds }
+        if (availableStickers.isEmpty()) {
+            _uiState.update { it.copy(message = "Alle Sticker bereits gesammelt.") }
             return
         }
         val lockedCells = _uiState.value.cells.filter { !it.unlocked }
@@ -69,10 +109,10 @@ class BingoViewModel @Inject constructor(
         }
 
         val chosen = lockedCells.random()
-        val sticker = stickerPool.random()
+        val sticker = availableStickers.random()
         val updatedCells = _uiState.value.cells.map { cell ->
             if (cell.id == chosen.id) {
-                cell.copy(unlocked = true, stickerName = sticker.name, stickerResId = sticker.resId)
+                cell.copy(unlocked = true, stickerResId = sticker.resId)
             } else cell
         }
 
@@ -89,4 +129,13 @@ class BingoViewModel @Inject constructor(
             pointsRepository.setPoints(updatedUser.email, newPoints)
         }
     }
+}
+
+private fun currentWeekKey(): String {
+    val zone = ZoneId.of("Europe/Berlin")
+    val now = ZonedDateTime.now(zone)
+    val weekFields = WeekFields.ISO
+    val week = now.get(weekFields.weekOfWeekBasedYear())
+    val year = now.get(weekFields.weekBasedYear())
+    return "$year-W$week"
 }
