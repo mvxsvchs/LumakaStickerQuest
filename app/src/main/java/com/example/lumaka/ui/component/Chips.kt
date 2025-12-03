@@ -2,6 +2,12 @@ package com.example.lumaka.ui.component
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
@@ -10,7 +16,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,9 +33,17 @@ fun CategoryChip(
     selected: Boolean,
     @StringRes title: Int,
     onClick: () -> Unit
-) =
+) {
+    val scale by animateFloatAsState(
+        targetValue = if (selected) 1.06f else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 200f),
+        label = "chipScale"
+    )
     FilterChip(
-        modifier = modifier,
+        modifier = modifier.graphicsLayer(
+            scaleX = scale,
+            scaleY = scale
+        ),
         selected = selected,
         label = {
             Text(
@@ -38,15 +54,16 @@ fun CategoryChip(
         },
         shape = RoundedCornerShape(size = 16.dp),
         leadingIcon = {
-            if (selected) {
+            AnimatedVisibility(
+                visible = selected,
+                enter = fadeIn() + scaleIn(),
+                exit = ExitTransition.None
+            ) {
                 Icon(
                     modifier = Modifier.size(size = 16.dp),
-                    painter = painterResource(
-                        id = R.drawable.chip_check_24
-                    ),
-                    contentDescription = null,
-
-                    )
+                    painter = painterResource(id = R.drawable.chip_check_24),
+                    contentDescription = null
+                )
             }
         },
         colors = FilterChipDefaults.filterChipColors(
@@ -66,6 +83,7 @@ fun CategoryChip(
         ),
         onClick = { onClick() },
     )
+}
 
 
 @Preview
