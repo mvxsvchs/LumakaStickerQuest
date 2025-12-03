@@ -2,6 +2,8 @@ package com.example.lumaka.ui.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lumaka.R
+import com.example.lumaka.data.repository.ApiResult
 import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
@@ -27,6 +29,7 @@ class RegisterViewModel @Inject constructor(
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val error: RegisterError? = null,
+        val errorMessageId: Int? = null,
     )
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -36,20 +39,20 @@ class RegisterViewModel @Inject constructor(
         val trimmedUsername = username.trim()
         val trimmedEmail = email.trim()
         if (password != confirmPassword) {
-            _uiState.update { it.copy(error = RegisterError.PASSWORD_MISMATCH) }
+            _uiState.update { it.copy(error = RegisterError.PASSWORD_MISMATCH, errorMessageId = null) }
             return
         }
         if (trimmedUsername.isBlank() || trimmedEmail.isBlank() || password.isBlank()) {
-            _uiState.update { it.copy(error = RegisterError.REQUIRED_FIELDS) }
+            _uiState.update { it.copy(error = RegisterError.REQUIRED_FIELDS, errorMessageId = null) }
             return
         }
         viewModelScope.launch {
             _uiState.update { RegisterUiState(isLoading = true) }
             val registerData = Registration(username = trimmedUsername, mail = trimmedEmail, password = password)
-            val success = userRepository.registerUser(registration = registerData)
+            val result = userRepository.registerUser(registration = registerData)
             _uiState.update {
-                when {
-                    success -> {
+                when (result) {
+                    is ApiResult.Success -> {
                         val user = User(
                             username = trimmedUsername,
                             userid = 0,
@@ -62,7 +65,14 @@ class RegisterViewModel @Inject constructor(
                         pointsRepository.setPoints(trimmedEmail, 0)
                         RegisterUiState(isSuccess = true)
                     }
-                    else -> RegisterUiState(error = RegisterError.GENERIC)
+                    is ApiResult.Error -> {
+                        val messageId = when {
+                            result.isNetworkError -> R.string.register_error_network
+                            result.statusCode == 409 -> R.string.register_error_conflict
+                            else -> R.string.register_error_generic
+                        }
+                        RegisterUiState(error = RegisterError.GENERIC, errorMessageId = messageId)
+                    }
                 }
             }
         }

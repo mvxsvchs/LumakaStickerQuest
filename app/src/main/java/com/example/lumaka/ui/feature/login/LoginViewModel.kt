@@ -2,6 +2,8 @@ package com.example.lumaka.ui.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lumaka.R
+import com.example.lumaka.data.repository.ApiResult
 import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
@@ -25,6 +27,7 @@ class LoginViewModel @Inject constructor(
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
         val errorMessageId: Int? = null,
+        val isNetworkError: Boolean = false,
     )
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -36,13 +39,14 @@ class LoginViewModel @Inject constructor(
             val trimmedEmail = email.trim()
             val loweredEmail = trimmedEmail.lowercase()
 
-            // Try with the original casing first, then fallback to lowercase to make login case-insensitive.
             val primaryResult = userRepository.loginUser(login = Login(mail = trimmedEmail, password = password))
-            val loginResult = primaryResult ?: if (trimmedEmail != loweredEmail) {
+            val finalResult = if (primaryResult is ApiResult.Error && trimmedEmail != loweredEmail) {
                 userRepository.loginUser(login = Login(mail = loweredEmail, password = password))
-            } else null
-            _uiState.value = when {
-                loginResult != null -> {
+            } else primaryResult
+
+            _uiState.value = when (finalResult) {
+                is ApiResult.Success -> {
+                    val loginResult = finalResult.data
                     val effectiveEmail = loginResult.email.ifBlank { loweredEmail }
                     val storedPoints = pointsRepository.getPoints(effectiveEmail)
                     val mergedPoints = max(loginResult.points, storedPoints)
@@ -52,7 +56,15 @@ class LoginViewModel @Inject constructor(
                     pointsRepository.setPoints(effectiveEmail, mergedPoints)
                     LoginUiState(isSuccess = true)
                 }
-                else -> LoginUiState(errorMessageId = com.example.lumaka.R.string.login_error_invalid)
+                is ApiResult.Error -> {
+                    val messageId = when {
+                        finalResult.isNetworkError -> R.string.login_error_network
+                        finalResult.statusCode == 400 -> R.string.login_error_bad_request
+                        finalResult.statusCode == 401 -> R.string.login_error_invalid
+                        else -> R.string.login_error_generic
+                    }
+                    LoginUiState(errorMessageId = messageId, isNetworkError = finalResult.isNetworkError)
+                }
             }
         }
     }

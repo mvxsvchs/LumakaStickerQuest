@@ -78,10 +78,10 @@ fun Login(
                     placeholder = R.string.login_password,
                     shouldHideText = true,
                 )
-                val errorId = uiState.errorMessageId
-                if (errorId != null) {
+                val errorMessageId = uiState.errorMessageId
+                if (errorMessageId != null) {
                     Text(
-                        text = stringResource(id = errorId),
+                        text = stringResource(id = errorMessageId),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.labelMedium,
                     )

@@ -104,7 +104,8 @@ fun Register(
                         text = when (error) {
                             RegisterViewModel.RegisterError.PASSWORD_MISMATCH -> stringResource(id = R.string.register_error_password_mismatch)
                             RegisterViewModel.RegisterError.REQUIRED_FIELDS -> stringResource(id = R.string.register_error_required_fields)
-                            RegisterViewModel.RegisterError.GENERIC -> stringResource(id = R.string.register_error_generic)
+                            RegisterViewModel.RegisterError.GENERIC -> uiState.errorMessageId?.let { stringResource(id = it) }
+                                ?: stringResource(id = R.string.register_error_generic)
                         },
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.labelMedium,
