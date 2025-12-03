@@ -16,14 +16,13 @@ import com.example.lumaka.ui.feature.home.HomeView
 import com.example.lumaka.ui.feature.login.Login
 import com.example.lumaka.ui.feature.login.StartView
 import com.example.lumaka.ui.feature.profile.ProfileRoute
-import com.example.lumaka.ui.feature.bingo.BingoBoardView
+import com.example.lumaka.ui.feature.bingo.BingoBoardRoute
 import com.example.lumaka.ui.feature.settings.SettingsView
 import com.example.lumaka.ui.feature.settings.PrivacyView
 import com.example.lumaka.ui.feature.register.Register
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.data.session.UserSession
-import androidx.compose.runtime.collectAsState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -73,7 +72,7 @@ fun AppNavigation(
             )
         }
         composable(route = AppScreens.BINGOBOARD) {
-            BingoBoardView(
+            BingoBoardRoute(
                 navController = navController
             )
         }

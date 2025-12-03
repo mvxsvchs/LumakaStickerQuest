@@ -1,25 +1,38 @@
 package com.example.lumaka.ui.feature.bingo
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,15 +41,49 @@ import com.example.lumaka.ui.component.NavigationBar
 import com.example.lumaka.ui.component.TopBarText
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.util.rememberPreviewNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.lumaka.data.session.UserSession
+
+@Composable
+fun BingoBoardRoute(
+    navController: NavController,
+    viewModel: BingoViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val userState by UserSession.user.collectAsState()
+    BingoBoardView(
+        navController = navController,
+        uiState = uiState,
+        points = userState?.points ?: 0,
+        onBuyRandomField = { viewModel.purchaseRandomCell() }
+    )
+}
 
 @Composable
 fun BingoBoardView(
-    navController: NavController
+    navController: NavController,
+    uiState: BingoUiState,
+    points: Int,
+    onBuyRandomField: () -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val rewardMessage = uiState.lastSticker?.let { sticker ->
+        stringResource(id = R.string.bingoboard_reward, sticker)
+    }
+
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let { snackbarHostState.showSnackbar(it) }
+    }
+    LaunchedEffect(rewardMessage) {
+        rewardMessage?.let { snackbarHostState.showSnackbar(message = it) }
+    }
+
+    val canBuy = uiState.remainingLocked > 0 && points >= 10
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { TopBarText() },
-        bottomBar = { NavigationBar(navController = navController) }
+        bottomBar = { NavigationBar(navController = navController) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -55,14 +102,55 @@ fun BingoBoardView(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            BingoGridPlaceholder()
+            Surface(
+                tonalElevation = 2.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.bingoboard_points_available, points),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Button(
+                        onClick = onBuyRandomField,
+                        enabled = canBuy,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(id = R.string.bingoboard_action_buy))
+                    }
+                    AnimatedVisibility(visible = !canBuy && points < 10 && uiState.remainingLocked > 0) {
+                        Text(
+                            text = stringResource(id = R.string.bingoboard_not_enough_points),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                    AnimatedVisibility(visible = uiState.remainingLocked == 0) {
+                        Text(
+                            text = stringResource(id = R.string.bingoboard_locked_finished),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+            BingoGrid(uiState.cells)
         }
     }
 }
 
 @Composable
-private fun BingoGridPlaceholder() {
-    val cells = List(9) { index -> "Feld ${index + 1}" }
+private fun BingoGrid(cells: List<BingoCell>) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -71,27 +159,59 @@ private fun BingoGridPlaceholder() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                row.forEach { label ->
-                    Surface(
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f),
-                        shape = RoundedCornerShape(12.dp),
-                        tonalElevation = 1.dp,
-                        color = MaterialTheme.colorScheme.surface
+                row.forEach { cell ->
+                    BingoCellCard(cell = cell)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RowScope.BingoCellCard(cell: BingoCell) {
+    val unlocked = cell.unlocked
+    Surface(
+        modifier = Modifier
+            .weight(1f)
+            .aspectRatio(1f),
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = if (unlocked) 4.dp else 1.dp,
+        color = if (unlocked) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = cell.title,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
+                )
+                AnimatedVisibility(visible = unlocked && cell.stickerResId != null) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Box(
+                        Image(
+                            painter = painterResource(id = cell.stickerResId!!),
+                            contentDescription = cell.stickerName,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                                .size(56.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                        Text(
+                            text = cell.stickerName.orEmpty(),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
@@ -103,8 +223,26 @@ private fun BingoGridPlaceholder() {
 @Composable
 private fun BingoPreviewLight() {
     val previewNavController = rememberPreviewNavController()
+    val sampleState = BingoUiState(
+        cells = listOf(
+            BingoCell(0, "Feld 1", unlocked = true, stickerName = "Red Panda 1", stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(1, "Feld 2"),
+            BingoCell(2, "Feld 3"),
+            BingoCell(3, "Feld 4"),
+            BingoCell(4, "Feld 5", unlocked = true, stickerName = "Skzoo 1", stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(5, "Feld 6"),
+            BingoCell(6, "Feld 7"),
+            BingoCell(7, "Feld 8"),
+            BingoCell(8, "Feld 9")
+        )
+    )
     LumakaTheme {
-        BingoBoardView(navController = previewNavController)
+        BingoBoardView(
+            navController = previewNavController,
+            uiState = sampleState,
+            points = 25,
+            onBuyRandomField = {}
+        )
     }
 }
 
@@ -112,7 +250,25 @@ private fun BingoPreviewLight() {
 @Composable
 private fun BingoPreviewDark() {
     val previewNavController = rememberPreviewNavController()
+    val sampleState = BingoUiState(
+        cells = listOf(
+            BingoCell(0, "Feld 1", unlocked = true, stickerName = "Red Panda 1", stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(1, "Feld 2"),
+            BingoCell(2, "Feld 3"),
+            BingoCell(3, "Feld 4"),
+            BingoCell(4, "Feld 5", unlocked = true, stickerName = "Skzoo 1", stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(5, "Feld 6"),
+            BingoCell(6, "Feld 7"),
+            BingoCell(7, "Feld 8"),
+            BingoCell(8, "Feld 9", unlocked = true, stickerName = "Skzoo 2", stickerResId = R.drawable.sticker_skzoo_02)
+        )
+    )
     LumakaTheme {
-        BingoBoardView(navController = previewNavController)
+        BingoBoardView(
+            navController = previewNavController,
+            uiState = sampleState,
+            points = 25,
+            onBuyRandomField = {}
+        )
     }
 }
