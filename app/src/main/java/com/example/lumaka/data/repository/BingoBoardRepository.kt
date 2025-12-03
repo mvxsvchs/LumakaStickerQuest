@@ -16,15 +16,19 @@ class BingoBoardRepository @Inject constructor(
         val cells: List<BingoCellEntity>
     )
 
-    suspend fun loadBoard(): BoardSnapshot {
-        val board = dao.getBoard()
-        val cells = board?.weekKey?.let { dao.getCellsForWeek(it) } ?: emptyList()
+    suspend fun loadBoard(userEmail: String): BoardSnapshot {
+        if (userEmail.isBlank()) return BoardSnapshot(board = null, cells = emptyList())
+        val normalizedEmail = userEmail.lowercase()
+        val board = dao.getBoard(normalizedEmail)
+        val cells = board?.weekKey?.let { dao.getCellsForWeek(normalizedEmail, it) } ?: emptyList()
         return BoardSnapshot(board = board, cells = cells)
     }
 
-    suspend fun saveBoard(weekKey: String, lastSticker: String?, cells: List<BingoCellEntity>) {
-        dao.upsertBoard(BingoBoardEntity(weekKey = weekKey, lastSticker = lastSticker, id = 0))
-        dao.deleteCellsNotInWeek(weekKey)
-        dao.upsertCells(cells.map { it.copy(weekKey = weekKey) })
+    suspend fun saveBoard(userEmail: String, weekKey: String, lastSticker: String?, cells: List<BingoCellEntity>) {
+        if (userEmail.isBlank()) return
+        val normalizedEmail = userEmail.lowercase()
+        dao.upsertBoard(BingoBoardEntity(userEmail = normalizedEmail, weekKey = weekKey, lastSticker = lastSticker))
+        dao.deleteCellsNotInWeek(normalizedEmail, weekKey)
+        dao.upsertCells(cells.map { it.copy(userEmail = normalizedEmail, weekKey = weekKey) })
     }
 }

@@ -1,12 +1,12 @@
 package com.example.lumaka.data.local
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "bingo_cells")
+@Entity(tableName = "bingo_cells", primaryKeys = ["userEmail", "weekKey", "cellId"])
 data class BingoCellEntity(
-    @PrimaryKey val cellId: Int,
+    val userEmail: String,
     val weekKey: String,
+    val cellId: Int,
     val unlocked: Boolean,
     val stickerResId: Int?
 )

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "bingo_board")
 data class BingoBoardEntity(
-    @PrimaryKey val id: Int = 0,
+    @PrimaryKey val userEmail: String,
     val weekKey: String,
     val lastSticker: String?
 )

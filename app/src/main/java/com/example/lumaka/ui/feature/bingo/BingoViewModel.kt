@@ -12,6 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -64,7 +67,12 @@ class BingoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            loadFromStorage()
+            UserSession.user
+                .map { it?.email?.lowercase().orEmpty() }
+                .distinctUntilChanged()
+                .collectLatest { email ->
+                    loadFromStorage(email.ifBlank { null })
+            }
         }
     }
 
@@ -74,7 +82,7 @@ class BingoViewModel @Inject constructor(
             _uiState.update {
                 BingoUiState(weekKey = currentKey)
             }
-            viewModelScope.launch { persistState() }
+            viewModelScope.launch { persistState(currentUserEmail()) }
         }
     }
 
@@ -116,7 +124,7 @@ class BingoViewModel @Inject constructor(
         )
         UserSession.update(updatedUser)
         _uiState.update { it.copy(cells = updatedCells, lastSticker = sticker.name, message = null) }
-        viewModelScope.launch { persistState() }
+        viewModelScope.launch { persistState(updatedUser.email) }
 
         viewModelScope.launch {
             sessionRepository.saveUser(updatedUser)
@@ -127,9 +135,14 @@ class BingoViewModel @Inject constructor(
     private fun baseCells(): List<BingoCell> =
         (0 until 9).map { index -> BingoCell(id = index, title = "Feld ${index + 1}") }
 
-    private suspend fun loadFromStorage() {
+    private suspend fun loadFromStorage(userEmail: String?) {
         val currentWeek = currentWeekKey()
-        val snapshot = bingoBoardRepository.loadBoard()
+        val email = userEmail?.takeIf { it.isNotBlank() }
+        if (email == null) {
+            _uiState.value = BingoUiState(weekKey = currentWeek)
+            return
+        }
+        val snapshot = bingoBoardRepository.loadBoard(email)
         val boardWeek = snapshot.board?.weekKey
         if (boardWeek == currentWeek) {
             val restoredCells = baseCells().map { cell ->
@@ -146,14 +159,16 @@ class BingoViewModel @Inject constructor(
             )
         } else {
             _uiState.value = BingoUiState(weekKey = currentWeek)
-            persistState()
+            persistState(email)
         }
     }
 
-    private suspend fun persistState() {
+    private suspend fun persistState(userEmail: String?) {
+        val email = userEmail?.takeIf { it.isNotBlank() } ?: return
         val state = _uiState.value
         val cellEntities = state.cells.map {
             com.example.lumaka.data.local.BingoCellEntity(
+                userEmail = email,
                 cellId = it.id,
                 weekKey = state.weekKey,
                 unlocked = it.unlocked,
@@ -161,11 +176,14 @@ class BingoViewModel @Inject constructor(
             )
         }
         bingoBoardRepository.saveBoard(
+            userEmail = email,
             weekKey = state.weekKey,
             lastSticker = state.lastSticker,
             cells = cellEntities
         )
     }
+
+    private fun currentUserEmail(): String? = UserSession.user.value?.email
 
     private fun unlocksBingo(cells: List<BingoCell>): Boolean {
         val grid = cells.sortedBy { it.id }.map { it.unlocked }
