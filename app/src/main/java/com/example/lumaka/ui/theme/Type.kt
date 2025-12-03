@@ -4,63 +4,59 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.lumaka.R
 
-private val Montserrat = FontFamily(
-    Font(R.font.montserrat_thin, FontWeight.Thin),
-    Font(R.font.montserrat_thin_italic, FontWeight.Thin, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_extra_light, FontWeight.ExtraLight),
-    Font(R.font.montserrat_extra_light_italic, FontWeight.ExtraLight, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_light, FontWeight.Light),
-    Font(R.font.montserrat_light_italic, FontWeight.Light, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_regular, FontWeight.Normal),
-    Font(R.font.montserrat_italic, FontWeight.Normal, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_medium, FontWeight.Medium),
-    Font(R.font.montserrat_medium_italic, FontWeight.Medium, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_semi_bold, FontWeight.SemiBold),
-    Font(R.font.montserrat_semi_bold_italic, FontWeight.SemiBold, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_bold, FontWeight.Bold),
-    Font(R.font.montserrat_bold_italic, FontWeight.Bold, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_extra_bold, FontWeight.ExtraBold),
-    Font(R.font.montserrat_extra_bold_italic, FontWeight.ExtraBold, style = androidx.compose.ui.text.font.FontStyle.Italic),
-
-    Font(R.font.montserrat_black, FontWeight.Black),
-    Font(R.font.montserrat_black_italic, FontWeight.Black, style = androidx.compose.ui.text.font.FontStyle.Italic)
+private val OpenDyslexic = FontFamily(
+    Font(R.font.open_dyslexic_regular, FontWeight.Normal),
+    Font(R.font.open_dyslexic_bold, FontWeight.Bold),
+    Font(R.font.open_dyslexic_italic, FontWeight.Normal, style = FontStyle.Italic),
+    Font(R.font.open_dyslexic_bold_italic, FontWeight.Bold, style = FontStyle.Italic)
 )
 
+private val BaseTypography = Typography()
+
 val Typography = Typography(
+    displayLarge = BaseTypography.displayLarge.copy(fontFamily = OpenDyslexic),
+    displayMedium = BaseTypography.displayMedium.copy(fontFamily = OpenDyslexic),
+    displaySmall = BaseTypography.displaySmall.copy(fontFamily = OpenDyslexic),
+
+    headlineLarge = BaseTypography.headlineLarge.copy(fontFamily = OpenDyslexic),
     bodyLarge = TextStyle(
-        fontFamily = Montserrat,
+        fontFamily = OpenDyslexic,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    bodyMedium = BaseTypography.bodyMedium.copy(fontFamily = OpenDyslexic),
+    bodySmall = BaseTypography.bodySmall.copy(fontFamily = OpenDyslexic),
+
+    titleLarge = BaseTypography.titleLarge.copy(fontFamily = OpenDyslexic),
+    titleMedium = BaseTypography.titleMedium.copy(fontFamily = OpenDyslexic),
+    titleSmall = BaseTypography.titleSmall.copy(fontFamily = OpenDyslexic),
+
     labelLarge = TextStyle(
-        fontFamily = Montserrat,
-        fontWeight = FontWeight.Medium,
+        fontFamily = OpenDyslexic,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    labelMedium = BaseTypography.labelMedium.copy(fontFamily = OpenDyslexic),
+    labelSmall = BaseTypography.labelSmall.copy(fontFamily = OpenDyslexic),
+
     headlineSmall = TextStyle(
-        fontFamily = Montserrat,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = OpenDyslexic,
+        fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = Montserrat,
+        fontFamily = OpenDyslexic,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 36.sp,
