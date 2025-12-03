@@ -29,8 +29,8 @@
     <string name="register_error_generic">Registrierung fehlgeschlagen, bitte erneut versuchen</string>
     <string name="profile_title">Profil</string>
     <string name="profile_points">Punkte</string>
-    <string name="profile_badges">Abzeichen</string>
-    <string name="profile_tasks_completed">Aufgaben erledigt</string>
+    <string name="profile_stickers">Sticker</string>
+    <string name="profile_stickers_empty">Noch keine Sticker gesammelt.</string>
     <string name="settings_title">Einstellungen</string>
     <string name="settings_notifications">Benachrichtigungen</string>
     <string name="settings_privacy">Datenschutz</string>

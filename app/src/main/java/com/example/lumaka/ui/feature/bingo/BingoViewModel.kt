@@ -6,6 +6,7 @@ import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.R
+import com.example.lumaka.ui.feature.bingo.StickerAssets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,37 +46,19 @@ class BingoViewModel @Inject constructor(
 
     private val stickerPool: List<Sticker> = buildList {
         (1..29).forEach { idx ->
-            add(
-                Sticker(
-                    name = "Red Panda $idx",
-                    resId = resourceId("sticker_redpanda_%02d", idx),
-                    id = idx
-                )
-            )
+            StickerAssets.resIdFor(idx)?.let { res ->
+                add(Sticker(name = "Red Panda $idx", resId = res, id = idx))
+            }
         }
         (1..31).forEach { idx ->
-            add(
-                Sticker(
-                    name = "Skzoo $idx",
-                    resId = resourceId("sticker_skzoo_%02d", idx),
-                    id = 100 + idx
-                )
-            )
+            StickerAssets.resIdFor(100 + idx)?.let { res ->
+                add(Sticker(name = "Skzoo $idx", resId = res, id = 100 + idx))
+            }
         }
-    }.filter { it.resId != 0 }
+    }
 
     private val _uiState = MutableStateFlow(BingoUiState())
     val uiState = _uiState.asStateFlow()
-
-    private fun resourceId(pattern: String, idx: Int): Int {
-        val name = pattern.format(idx)
-        val res = R.drawable::class.java
-        return try {
-            res.getField(name).getInt(res)
-        } catch (_: Throwable) {
-            0
-        }
-    }
 
     fun ensureWeekIsCurrent() {
         val currentKey = currentWeekKey()

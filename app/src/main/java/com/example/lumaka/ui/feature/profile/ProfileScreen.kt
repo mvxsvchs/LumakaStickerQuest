@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lumaka.R
 import com.example.lumaka.domain.model.User
+import com.example.lumaka.ui.feature.bingo.StickerAssets
 import com.example.lumaka.ui.component.NavigationBar
 import com.example.lumaka.ui.component.TopBarText
 import com.example.lumaka.ui.theme.LumakaTheme
@@ -103,11 +107,13 @@ fun ProfileView(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
+                val stickerResIds = user?.stickerid?.mapNotNull { StickerAssets.resIdFor(it) } ?: emptyList()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     val animatedPoints by animateIntAsState(
                         targetValue = user?.points ?: 0,
@@ -119,14 +125,12 @@ fun ProfileView(
                         value = animatedPoints.toString()
                     )
                     ProfileStat(
-                        label = stringResource(id = R.string.profile_badges),
-                        value = "-"
-                    )
-                    ProfileStat(
-                        label = stringResource(id = R.string.profile_tasks_completed),
-                        value = "-"
+                        label = stringResource(id = R.string.profile_stickers),
+                        value = stickerResIds.size.toString()
                     )
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+                StickerGrid(stickerResIds = user?.stickerid ?: emptyList())
             }
         }
     }
@@ -148,6 +152,63 @@ private fun ProfileStat(label: String, value: String){
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@Composable
+private fun StickerGrid(stickerResIds: List<Int>) {
+    val resolved = stickerResIds.mapNotNull { StickerAssets.resIdFor(it) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.profile_stickers),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        if (resolved.isEmpty()) {
+            Text(
+                text = stringResource(id = R.string.profile_stickers_empty),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            resolved.chunked(4).forEach { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    row.forEach { resId ->
+                        Card(
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            )
+                        ) {
+                            androidx.compose.foundation.Image(
+                                painter = androidx.compose.ui.res.painterResource(id = resId),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp),
+                                contentScale = androidx.compose.ui.layout.ContentScale.Fit
+                            )
+                        }
+                    }
+                    if (row.size < 4) {
+                        repeat(4 - row.size) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

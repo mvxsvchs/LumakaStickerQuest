@@ -3,42 +3,42 @@ package com.example.lumaka.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // ---------- Light Theme  ----------
-val Primary = Color(0xFF80C9D6)
-val OnPrimary = Color(0xFF002022)
-val PrimaryContainer = Color(0xFFAED9E0)
-val OnPrimaryContainer = Color(0xFF002022)
+val Primary = Color(0xFFFFB5A7)            // soft peach
+val OnPrimary = Color(0xFF3F231E)
+val PrimaryContainer = Color(0xFFFFE0D6)
+val OnPrimaryContainer = Color(0xFF3F231E)
 
-val Secondary = Color(0xFFE5B9D6)
-val OnSecondary = Color(0xFF381E2C)
-val SecondaryContainer = Color(0xFFF7DCEC)
-val OnSecondaryContainer = Color(0xFF261320)
+val Secondary = Color(0xFFB7D9C1)          // minty sage
+val OnSecondary = Color(0xFF123526)
+val SecondaryContainer = Color(0xFFDDF0E3)
+val OnSecondaryContainer = Color(0xFF123526)
 
-val Tertiary = Color(0xFFB4D6A0)
-val OnTertiary = Color(0xFF0D1F0B)
-val TertiaryContainer = Color(0xFFD9F2CA)
-val OnTertiaryContainer = Color(0xFF132312)
+val Tertiary = Color(0xFFF7DDE3)           // blush
+val OnTertiary = Color(0xFF3C1D26)
+val TertiaryContainer = Color(0xFFFFEEF3)
+val OnTertiaryContainer = Color(0xFF3C1D26)
 
-val Error = Color(0xFFD98880)
-val OnError = Color(0xFF3F0404)
+val Error = Color(0xFFFFB4AB)
+val OnError = Color(0xFF690005)
 val ErrorContainer = Color(0xFFFFDAD6)
 val OnErrorContainer = Color(0xFF410002)
 
-val Background = Color(0xFFD6F3F7)
-val OnBackground = Color(0xFF1C1B1F)
+val Background = Color(0xFFFFF6F2)
+val OnBackground = Color(0xFF1F1A1A)
 
-val Surface = Color(0xFFEDF9FA)
-val OnSurface = Color(0xFF1C1B1F)
+val Surface = Color(0xFFFFFBF8)
+val OnSurface = Color(0xFF1F1A1A)
 
-val SurfaceVariant = Color(0xFFE7E0DA)
-val OnSurfaceVariant = Color(0xFF494541)
+val SurfaceVariant = Color(0xFFE9DED7)
+val OnSurfaceVariant = Color(0xFF4B4542)
 
-val Outline = Color(0xFF7D766E)
-val OutlineVariant = Color(0xFFD0C5BE)
+val Outline = Color(0xFF8B817B)
+val OutlineVariant = Color(0xFFD8CCC5)
 
 val Scrim = Color(0xFF000000)
-val InverseSurface = Color(0xFF32302C)
-val InverseOnSurface = Color(0xFFF5EFEA)
-val InversePrimary = Color(0xFF80C9D6)
+val InverseSurface = Color(0xFF332D29)
+val InverseOnSurface = Color(0xFFFFF6F2)
+val InversePrimary = Color(0xFFFFB5A7)
 
 
 // ---------- Dark Theme  ----------
