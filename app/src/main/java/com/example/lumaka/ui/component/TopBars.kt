@@ -1,5 +1,7 @@
 package com.example.lumaka.ui.component
 
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,6 +11,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,8 +35,13 @@ fun TopBarText() {
         actions = {
             val points = user.value?.points
             if (points != null) {
+                val animatedPoints by animateIntAsState(
+                    targetValue = points,
+                    animationSpec = tween(durationMillis = 500),
+                    label = "topbarPoints"
+                )
                 Text(
-                    text = points.toString(),
+                    text = animatedPoints.toString(),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
