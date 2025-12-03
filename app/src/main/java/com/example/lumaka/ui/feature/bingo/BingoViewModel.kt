@@ -108,7 +108,8 @@ class BingoViewModel @Inject constructor(
             } else cell
         }
 
-        val newPoints = (currentUser.points - BINGO_COST).coerceAtLeast(0)
+        val bingoBonus = if (unlocksBingo(updatedCells)) 5 else 0
+        val newPoints = (currentUser.points - BINGO_COST + bingoBonus).coerceAtLeast(0)
         val updatedUser = currentUser.copy(
             points = newPoints,
             stickerid = currentUser.stickerid + sticker.id
@@ -164,6 +165,15 @@ class BingoViewModel @Inject constructor(
             lastSticker = state.lastSticker,
             cells = cellEntities
         )
+    }
+
+    private fun unlocksBingo(cells: List<BingoCell>): Boolean {
+        val grid = cells.sortedBy { it.id }.map { it.unlocked }
+        fun row(idx: Int) = grid[idx] && grid[idx + 1] && grid[idx + 2]
+        fun col(idx: Int) = grid[idx] && grid[idx + 3] && grid[idx + 6]
+        fun diag1() = grid[0] && grid[4] && grid[8]
+        fun diag2() = grid[2] && grid[4] && grid[6]
+        return row(0) || row(3) || row(6) || col(0) || col(1) || col(2) || diag1() || diag2()
     }
 }
 

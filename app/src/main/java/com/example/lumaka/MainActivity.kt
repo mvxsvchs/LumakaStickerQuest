@@ -20,6 +20,7 @@ import com.example.lumaka.ui.feature.bingo.BingoBoardRoute
 import com.example.lumaka.ui.feature.settings.SettingsView
 import com.example.lumaka.ui.feature.settings.PrivacyView
 import com.example.lumaka.ui.feature.register.Register
+import com.example.lumaka.ui.feature.shop.ShopView
 import com.example.lumaka.ui.navigation.AppScreens
 import com.example.lumaka.ui.theme.LumakaTheme
 import com.example.lumaka.data.session.UserSession
@@ -68,6 +69,11 @@ fun AppNavigation(
         }
         composable(route = AppScreens.SETTINGS) {
             SettingsView(
+                navController = navController
+            )
+        }
+        composable(route = AppScreens.SHOP) {
+            ShopView(
                 navController = navController
             )
         }

@@ -11,5 +11,6 @@ object AppScreens {
     const val SETTINGS = "Settings"
     const val PRIVACY = "Privacy"
     const val BINGOBOARD = "Bingoboard"
+    const val SHOP = "Shop"
 
 }

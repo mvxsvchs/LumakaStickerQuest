@@ -22,9 +22,9 @@
     <string name="category_selfcare">Selbstpflege</string>
     <string name="category_gym">Sport</string>
 
-    <string name="home_add_task">Aufgabe hinzufügen</string>
+    <string name="home_add_task">Aufgabe hinzufuegen</string>
     <string name="login_error_invalid">Email oder Passwort ist falsch</string>
-    <string name="register_error_password_mismatch">Passwoerter stimmen nicht überein</string>
+    <string name="register_error_password_mismatch">Passwoerter stimmen nicht ueberein</string>
     <string name="register_error_required_fields">Alle Felder sind erforderlich</string>
     <string name="register_error_generic">Registrierung fehlgeschlagen, bitte erneut versuchen</string>
     <string name="profile_title">Profil</string>
@@ -39,10 +39,19 @@
     <string name="settings_privacy_body">Hier steht die Datenschutzerklaerung. Dies ist ein Platzhaltertext - bitte ersetzen Sie ihn durch eine echte Datenschutzinformation.</string>
 
     <string name="bingoboard_title">Bingoboard</string>
-    <string name="bingoboard_subtitle">Kaufe ein zufälliges Feld für 10 Punkte und erhalte einen zufälligen Sticker.</string>
-    <string name="bingoboard_action_buy">Zufälliges Feld kaufen (-10 Punkte)</string>
-    <string name="bingoboard_points_available">Verfügbare Punkte: %1$d</string>
+    <string name="bingoboard_subtitle">Kaufe ein zufaelliges Feld fuer 10 Punkte und erhalte einen zufaelligen Sticker.</string>
+    <string name="bingoboard_action_buy">Zufaelliges Feld kaufen (-10 Punkte)</string>
+    <string name="bingoboard_points_available">Verfuegbare Punkte: %1$d</string>
     <string name="bingoboard_not_enough_points">Du brauchst mindestens 10 Punkte.</string>
     <string name="bingoboard_locked_finished">Alle Felder sind bereits freigeschaltet.</string>
     <string name="bingoboard_reward">Sticker %1$s erhalten!</string>
+
+    <string name="shop_title">Sticker Shop</string>
+    <string name="shop_subtitle">Kaufe exklusive Sticker-Sets für dein Board.</string>
+    <string name="shop_buy">Kaufen</string>
+    <string name="shop_price">3,99 EUR</string>
+    <string name="shop_set_comfy">Comfy Pack</string>
+    <string name="shop_set_comfy_desc">12 gemütliche Sticker im Pastell-Look.</string>
+    <string name="shop_set_energy">Energy Pack</string>
+    <string name="shop_set_energy_desc">12 energetische Sticker mit Neon-Akzenten.</string>
 </resources>
