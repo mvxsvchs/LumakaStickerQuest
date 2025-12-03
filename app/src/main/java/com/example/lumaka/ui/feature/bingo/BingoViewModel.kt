@@ -1,6 +1,5 @@
 package com.example.lumaka.ui.feature.bingo
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.PointsRepository
@@ -8,6 +7,7 @@ import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.R
 import com.example.lumaka.ui.feature.bingo.StickerAssets
+import com.example.lumaka.data.repository.BingoBoardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +43,7 @@ private data class Sticker(val name: String, val resId: Int, val id: Int)
 class BingoViewModel @Inject constructor(
     private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val bingoBoardRepository: BingoBoardRepository
 ) : ViewModel() {
 
     private val stickerPool: List<Sticker> = buildList {
@@ -59,8 +59,14 @@ class BingoViewModel @Inject constructor(
         }
     }
 
-    private val _uiState = MutableStateFlow(loadInitialState())
+    private val _uiState = MutableStateFlow(BingoUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            loadFromStorage()
+        }
+    }
 
     fun ensureWeekIsCurrent() {
         val currentKey = currentWeekKey()
@@ -68,7 +74,7 @@ class BingoViewModel @Inject constructor(
             _uiState.update {
                 BingoUiState(weekKey = currentKey)
             }
-            persistState()
+            viewModelScope.launch { persistState() }
         }
     }
 
@@ -109,7 +115,7 @@ class BingoViewModel @Inject constructor(
         )
         UserSession.update(updatedUser)
         _uiState.update { it.copy(cells = updatedCells, lastSticker = sticker.name, message = null) }
-        persistState()
+        viewModelScope.launch { persistState() }
 
         viewModelScope.launch {
             sessionRepository.saveUser(updatedUser)
@@ -120,40 +126,44 @@ class BingoViewModel @Inject constructor(
     private fun baseCells(): List<BingoCell> =
         (0 until 9).map { index -> BingoCell(id = index, title = "Feld ${index + 1}") }
 
-    private fun loadInitialState(): BingoUiState {
-        val savedWeek = savedStateHandle.get<String>(KEY_WEEK) ?: return BingoUiState()
+    private suspend fun loadFromStorage() {
         val currentWeek = currentWeekKey()
-        if (savedWeek != currentWeek) return BingoUiState(weekKey = currentWeek)
-
-        val unlocked = savedStateHandle.get<List<Int>>(KEY_UNLOCKED) ?: emptyList()
-        val stickers = savedStateHandle.get<List<Int>>(KEY_STICKERS) ?: emptyList()
-        val lastSticker = savedStateHandle.get<String>(KEY_LAST_STICKER)
-        val cells = baseCells().mapIndexed { idx, cell ->
-            val isUnlocked = unlocked.getOrNull(idx) == 1
-            val stickerRes = stickers.getOrNull(idx)?.takeIf { it > 0 }
-            cell.copy(unlocked = isUnlocked, stickerResId = stickerRes)
+        val snapshot = bingoBoardRepository.loadBoard()
+        val boardWeek = snapshot.board?.weekKey
+        if (boardWeek == currentWeek) {
+            val restoredCells = baseCells().map { cell ->
+                val stored = snapshot.cells.firstOrNull { it.cellId == cell.id }
+                if (stored != null) {
+                    cell.copy(unlocked = stored.unlocked, stickerResId = stored.stickerResId)
+                } else cell
+            }
+            _uiState.value = BingoUiState(
+                cells = restoredCells,
+                lastSticker = snapshot.board?.lastSticker,
+                message = null,
+                weekKey = boardWeek
+            )
+        } else {
+            _uiState.value = BingoUiState(weekKey = currentWeek)
+            persistState()
         }
-        return BingoUiState(
-            cells = cells,
-            lastSticker = lastSticker,
-            message = null,
-            weekKey = savedWeek
-        )
     }
 
-    private fun persistState() {
+    private suspend fun persistState() {
         val state = _uiState.value
-        savedStateHandle[KEY_WEEK] = state.weekKey
-        savedStateHandle[KEY_LAST_STICKER] = state.lastSticker
-        savedStateHandle[KEY_UNLOCKED] = state.cells.map { if (it.unlocked) 1 else 0 }
-        savedStateHandle[KEY_STICKERS] = state.cells.map { it.stickerResId ?: -1 }
-    }
-
-    companion object {
-        private const val KEY_WEEK = "bingo_week_key"
-        private const val KEY_UNLOCKED = "bingo_unlocked"
-        private const val KEY_STICKERS = "bingo_stickers"
-        private const val KEY_LAST_STICKER = "bingo_last"
+        val cellEntities = state.cells.map {
+            com.example.lumaka.data.local.BingoCellEntity(
+                cellId = it.id,
+                weekKey = state.weekKey,
+                unlocked = it.unlocked,
+                stickerResId = it.stickerResId
+            )
+        }
+        bingoBoardRepository.saveBoard(
+            weekKey = state.weekKey,
+            lastSticker = state.lastSticker,
+            cells = cellEntities
+        )
     }
 }
 

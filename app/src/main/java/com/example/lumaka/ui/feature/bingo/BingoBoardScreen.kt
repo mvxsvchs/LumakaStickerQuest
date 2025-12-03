@@ -74,18 +74,8 @@ fun BingoBoardView(
     onBuyRandomField: () -> Unit,
     onWeekTick: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val rewardMessage = uiState.lastSticker?.let { sticker ->
-        stringResource(id = R.string.bingoboard_reward, sticker)
-    }
     var remainingReset by remember { mutableStateOf("") }
 
-    LaunchedEffect(uiState.message) {
-        uiState.message?.let { snackbarHostState.showSnackbar(it) }
-    }
-    LaunchedEffect(rewardMessage) {
-        rewardMessage?.let { snackbarHostState.showSnackbar(message = it) }
-    }
     LaunchedEffect(uiState.weekKey) {
         val zone = ZoneId.of("Europe/Berlin")
         while (true) {
@@ -104,8 +94,7 @@ fun BingoBoardView(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { TopBarText() },
-        bottomBar = { NavigationBar(navController = navController) },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        bottomBar = { NavigationBar(navController = navController) }
     ) { padding ->
         Column(
             modifier = Modifier
