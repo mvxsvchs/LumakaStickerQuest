@@ -20,4 +20,8 @@ class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null
         )
+
+    fun selectAvatar(avatarId: Int) {
+        UserSession.updateAvatar(avatarId)
+    }
 }

@@ -6,4 +6,5 @@ data class UserDTO(
     val points: Int,
     val stickerId: List<Int>,
     val email: String? = null,
+    val avatarId: Int? = null,
 )

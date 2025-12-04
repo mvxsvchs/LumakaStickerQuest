@@ -39,6 +39,9 @@
     <string name="profile_points">Punkte</string>
     <string name="profile_stickers">Sticker</string>
     <string name="profile_stickers_empty">Noch keine Sticker gesammelt.</string>
+    <string name="profile_avatar_title">Avatar auswaehlen</string>
+    <string name="profile_avatar_option">Avatar Option %1$d</string>
+    <string name="profile_avatar_current">Aktueller Avatar</string>
 
     <string name="settings_title">Einstellungen</string>
     <string name="settings_notifications">Benachrichtigungen</string>

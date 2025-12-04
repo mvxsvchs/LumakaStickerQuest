@@ -18,4 +18,8 @@ object UserSession {
             current.copy(points = newPoints)
         }
     }
+
+    fun updateAvatar(avatarId: Int) {
+        _user.value = _user.value?.copy(avatarId = avatarId)
+    }
 }
