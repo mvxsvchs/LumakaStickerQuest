@@ -3,78 +3,78 @@ package com.example.lumaka.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // ---------- Light Theme  ----------
-val Primary = Color(0xFF8FA3FF)            // soft indigo
-val OnPrimary = Color(0xFF0E1A3D)
-val PrimaryContainer = Color(0xFFDFE4FF)
-val OnPrimaryContainer = Color(0xFF0E1A3D)
+val Primary = Color(0xFF5F8BFF)            // modern blue focus
+val OnPrimary = Color(0xFF0A1C44)
+val PrimaryContainer = Color(0xFFE0E7FF)
+val OnPrimaryContainer = Color(0xFF14285E)
 
-val Secondary = Color(0xFFFFC6A8)          // peach
-val OnSecondary = Color(0xFF3E2315)
-val SecondaryContainer = Color(0xFFFFE4D7)
-val OnSecondaryContainer = Color(0xFF3E2315)
+val Secondary = Color(0xFF4EC7A1)          // balanced mint
+val OnSecondary = Color(0xFF0B241A)
+val SecondaryContainer = Color(0xFFD5F4E8)
+val OnSecondaryContainer = Color(0xFF16352A)
 
-val Tertiary = Color(0xFFA5DFC7)           // mint
-val OnTertiary = Color(0xFF0F3023)
-val TertiaryContainer = Color(0xFFD8F4E8)
-val OnTertiaryContainer = Color(0xFF0F3023)
+val Tertiary = Color(0xFFFF90B6)           // soft coral accent
+val OnTertiary = Color(0xFF2A0E1A)
+val TertiaryContainer = Color(0xFFFFD9E7)
+val OnTertiaryContainer = Color(0xFF331520)
 
 val Error = Color(0xFFFFB4AB)
 val OnError = Color(0xFF690005)
 val ErrorContainer = Color(0xFFFFDAD6)
 val OnErrorContainer = Color(0xFF410002)
 
-val Background = Color(0xFFF7F3EB)         // warm off-white
-val OnBackground = Color(0xFF1F1B16)
+val Background = Color(0xFFF6F7FB)         // clean, low-glare base
+val OnBackground = Color(0xFF131620)
 
-val Surface = Color(0xFFFFFBF6)
-val OnSurface = Color(0xFF201B17)
+val Surface = Color(0xFFFCFDFF)
+val OnSurface = Color(0xFF131620)
 
-val SurfaceVariant = Color(0xFFE2D7CC)
-val OnSurfaceVariant = Color(0xFF4B4138)
+val SurfaceVariant = Color(0xFFE3E6F0)
+val OnSurfaceVariant = Color(0xFF424957)
 
-val Outline = Color(0xFF8B817B)
-val OutlineVariant = Color(0xFFD8CCC5)
+val Outline = Color(0xFF8A90A2)
+val OutlineVariant = Color(0xFFD4D8E4)
 
 val Scrim = Color(0xFF000000)
-val InverseSurface = Color(0xFF332D29)
-val InverseOnSurface = Color(0xFFFFF6F2)
-val InversePrimary = Color(0xFF8FA3FF)
+val InverseSurface = Color(0xFF1F2330)
+val InverseOnSurface = Color(0xFFF1F3F9)
+val InversePrimary = Color(0xFFC6D3FF)
 
 
 // ---------- Dark Theme  ----------
-val PrimaryDark = Color(0xFFEEB98E)
-val OnPrimaryDark = Color(0xFF3F2500)
-val PrimaryContainerDark = Color(0xFF5C3B1C)
-val OnPrimaryContainerDark = Color(0xFFFFE0C2)
+val PrimaryDark = Color(0xFF9AB6FF)
+val OnPrimaryDark = Color(0xFF0A1C44)
+val PrimaryContainerDark = Color(0xFF234077)
+val OnPrimaryContainerDark = Color(0xFFC9D6FF)
 
-val SecondaryDark = Color(0xFFD6A9C3)
-val OnSecondaryDark = Color(0xFF2C1120)
-val SecondaryContainerDark = Color(0xFF4B2C3E)
-val OnSecondaryContainerDark = Color(0xFFF7DCEC)
+val SecondaryDark = Color(0xFF8FE4CC)
+val OnSecondaryDark = Color(0xFF0B241A)
+val SecondaryContainerDark = Color(0xFF1F3E33)
+val OnSecondaryContainerDark = Color(0xFFBEEEDC)
 
-val TertiaryDark = Color(0xFF9ACF83)
-val OnTertiaryDark = Color(0xFF1B3616)
-val TertiaryContainerDark = Color(0xFF345029)
-val OnTertiaryContainerDark = Color(0xFFD9F2CA)
+val TertiaryDark = Color(0xFFFFB3D2)
+val OnTertiaryDark = Color(0xFF331520)
+val TertiaryContainerDark = Color(0xFF4A2536)
+val OnTertiaryContainerDark = Color(0xFFFFDCEB)
 
 val ErrorDark = Color(0xFFFFB4AB)
 val OnErrorDark = Color(0xFF690005)
 val ErrorContainerDark = Color(0xFF93000A)
 val OnErrorContainerDark = Color(0xFFFFDAD6)
 
-val BackgroundDark = Color(0xFF1C1B1F)
-val OnBackgroundDark = Color(0xFFEAE6E1)
+val BackgroundDark = Color(0xFF0F121A)
+val OnBackgroundDark = Color(0xFFE6E8F0)
 
-val SurfaceDark = Color(0xFF2A292D)
-val OnSurfaceDark = Color(0xFFEAE6E1)
+val SurfaceDark = Color(0xFF171B24)
+val OnSurfaceDark = Color(0xFFE6E8F0)
 
-val SurfaceVariantDark = Color(0xFF4A4540)
-val OnSurfaceVariantDark = Color(0xFFCFC5BE)
+val SurfaceVariantDark = Color(0xFF3A404D)
+val OnSurfaceVariantDark = Color(0xFFC8CDDC)
 
-val OutlineDark = Color(0xFF998F87)
-val OutlineVariantDark = Color(0xFF4A4540)
+val OutlineDark = Color(0xFF8D92A3)
+val OutlineVariantDark = Color(0xFF3A404D)
 
 val ScrimDark = Color(0xFF000000)
-val InverseSurfaceDark = Color(0xFFEAE6E1)
-val InverseOnSurfaceDark = Color(0xFF313033)
-val InversePrimaryDark = Color(0xFFD6F3F7)
+val InverseSurfaceDark = Color(0xFFE6E8F0)
+val InverseOnSurfaceDark = Color(0xFF131620)
+val InversePrimaryDark = Color(0xFFADC4FF)
