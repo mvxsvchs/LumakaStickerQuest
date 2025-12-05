@@ -1,6 +1,6 @@
 name: android_ci
 
-# Wann?
+# Wann ausführen?
 on:
   push:
     branches: [main]
