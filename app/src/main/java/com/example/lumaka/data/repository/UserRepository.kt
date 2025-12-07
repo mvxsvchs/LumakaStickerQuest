@@ -1,5 +1,6 @@
 package com.example.lumaka.data.repository
 
+import android.util.Log
 import com.example.lumaka.data.mapper.toDTO
 import com.example.lumaka.data.mapper.toDomain
 import com.example.lumaka.data.remote.api.QuestService
@@ -46,6 +47,15 @@ class UserRepository @Inject constructor(private val api: QuestService) {
     suspend fun getUserById(userId: Int): User? {
         val result = api.getUserById(userid = userId)
         return result?.toDomain()
+    }
+
+    suspend fun updateStickers(userId: Int, stickers: List<Int>) {
+        if (userId <= 0) return
+        try {
+            api.updateStickers(userId = userId, request = com.example.lumaka.data.remote.dto.UpdateStickersRequest(stickers))
+        } catch (e: Throwable) {
+            Log.e("UserRepository", "Failed to update stickers: ${e.message}", e)
+        }
     }
 
     private fun Throwable.safeMessage(): String =

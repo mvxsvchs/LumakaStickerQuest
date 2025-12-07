@@ -3,6 +3,13 @@ package com.example.lumaka.ui.feature.bingo
 import com.example.lumaka.R
 
 object StickerAssets {
+    private val idToResId: Map<Int, Int> by lazy {
+        buildMap {
+            (1..29).forEach { id -> resIdFor(id)?.let { put(id, it) } }
+            (101..131).forEach { id -> resIdFor(id)?.let { put(id, it) } }
+        }
+    }
+
     /**
      * Returns the drawable resource ID for a given sticker ID.
      * - 1..29 map to sticker_redpanda_01..29
@@ -20,4 +27,9 @@ object StickerAssets {
             null
         }
     }
+
+    /**
+     * Reverse lookup: given a drawable resource ID, returns the sticker ID (1..29, 101..131) or null.
+     */
+    fun idForRes(resId: Int): Int? = idToResId.entries.firstOrNull { it.value == resId }?.key
 }

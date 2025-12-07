@@ -414,6 +414,10 @@ private fun HomeScreenPreviewLight() {
                 request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
             ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
                 com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
+            override suspend fun updateStickers(
+                userId: Int,
+                request: com.example.lumaka.data.remote.dto.UpdateStickersRequest
+            ) { }
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
@@ -446,6 +450,10 @@ private fun HomeScreenPreviewDark() {
                 request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
             ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
                 com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
+            override suspend fun updateStickers(
+                userId: Int,
+                request: com.example.lumaka.data.remote.dto.UpdateStickersRequest
+            ) { }
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),

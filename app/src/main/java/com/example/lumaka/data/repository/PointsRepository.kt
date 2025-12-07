@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.delay
+import retrofit2.HttpException
 
 @Singleton
 class PointsRepository @Inject constructor(
@@ -31,6 +32,10 @@ class PointsRepository @Inject constructor(
                 api.updatePoints(payload)
                 return
             } catch (t: Throwable) {
+                if (t is HttpException && t.code() == 404) {
+                    Log.w(logTag, "Points sync skipped (endpoint not available, 404).")
+                    return
+                }
                 Log.w(logTag, "Failed to sync points (attempt ${attempt + 1}): ${t.message}", t)
                 if (attempt < 2) {
                     delay(500L * (attempt + 1))

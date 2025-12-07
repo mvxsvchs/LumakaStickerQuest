@@ -9,6 +9,7 @@ import com.example.lumaka.data.remote.dto.TaskCreateResponse
 import com.example.lumaka.data.remote.dto.TaskResponse
 import com.example.lumaka.data.remote.dto.TaskUpdateRequest
 import com.example.lumaka.data.remote.dto.TaskUpdateResponse
+import com.example.lumaka.data.remote.dto.UpdateStickersRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -43,4 +44,10 @@ interface QuestService {
         @Path(value = "id") taskId: Int,
         @Body request: TaskUpdateRequest
     ): TaskUpdateResponse
+
+    @PUT(value = "user/{id}/stickers")
+    suspend fun updateStickers(
+        @Path(value = "id") userId: Int,
+        @Body request: UpdateStickersRequest
+    )
 }
