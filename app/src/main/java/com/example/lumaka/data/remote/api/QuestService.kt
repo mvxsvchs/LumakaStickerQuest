@@ -3,7 +3,6 @@ package com.example.lumaka.data.remote.api
 import com.example.lumaka.data.remote.dto.LoginDTO
 import com.example.lumaka.data.remote.dto.RegisterDTO
 import com.example.lumaka.data.remote.dto.UserDTO
-import com.example.lumaka.data.remote.dto.PointsDTO
 import com.example.lumaka.data.remote.dto.TaskCreateRequest
 import com.example.lumaka.data.remote.dto.TaskCreateResponse
 import com.example.lumaka.data.remote.dto.TaskResponse
@@ -26,9 +25,6 @@ interface QuestService {
 
     @GET(value = "user/{id}")
     suspend fun getUserById(@Path(value = "id") userid: Int): UserDTO?
-
-    @POST(value = "user/points")
-    suspend fun updatePoints(@Body pointsDTO: PointsDTO)
 
     @POST(value = "task")
     suspend fun createTask(@Body request: TaskCreateRequest): TaskCreateResponse

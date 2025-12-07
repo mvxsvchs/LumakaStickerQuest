@@ -3,6 +3,7 @@ package com.example.lumaka.ui.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.data.repository.PointsRepository
+import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.TaskRepository
 import com.example.lumaka.data.session.UserSession
 import com.example.lumaka.data.repository.SessionRepository
@@ -21,7 +22,8 @@ import android.util.Log
 class HomeViewModel @Inject constructor(
     private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val logTag = "HomeViewModel"
@@ -80,18 +82,19 @@ class HomeViewModel @Inject constructor(
                 taskId = id,
                 isCompleted = newCompleted
             )
-            if (newPoints != null) {
-                val updatedUser = user.copy(points = newPoints)
-                UserSession.update(updatedUser)
-                sessionRepository.saveUser(updatedUser)
-                pointsRepository.setPoints(updatedUser.userid, newPoints)
-            } else {
+            if (newPoints == null) {
                 Log.w(logTag, "Toggle failed, reverting task $id")
                 _tasks.update { current ->
                     current.map { task ->
                         if (task.id == id) task.copy(completed = taskBefore.completed) else task
                     }
                 }
+            } else {
+                // points are calculated on the backend; sync fresh user state
+                val refreshed = runCatching { userRepository.getUserById(user.userid) }.getOrNull()
+                val syncedUser = refreshed ?: user.copy(points = newPoints)
+                UserSession.update(syncedUser)
+                sessionRepository.saveUser(syncedUser)
             }
             loadTasks(user.userid)
         }

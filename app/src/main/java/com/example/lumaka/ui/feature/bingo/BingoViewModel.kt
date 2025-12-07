@@ -134,9 +134,6 @@ class BingoViewModel @Inject constructor(
             if (refreshed != null) {
                 UserSession.update(refreshed)
                 sessionRepository.saveUser(refreshed)
-                pointsRepository.setPoints(refreshed.userid, refreshed.points)
-            } else {
-                pointsRepository.setPoints(updatedUser.userid, newPoints)
             }
         }
     }
