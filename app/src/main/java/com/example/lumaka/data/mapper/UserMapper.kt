@@ -7,7 +7,7 @@ fun UserDTO.toDomain(fallbackEmail: String = ""): User {
     return User(
         username = this.username,
         userid = this.resolvedUserId,
-        points = this.points,
+        points = this.resolvedPoints,
         stickerid = this.resolvedStickerIds,
         email = this.resolvedEmail ?: fallbackEmail,
         avatarId = this.resolvedAvatarId ?: 1,
