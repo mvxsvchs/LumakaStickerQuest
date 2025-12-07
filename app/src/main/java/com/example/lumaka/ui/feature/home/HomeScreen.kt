@@ -405,10 +405,20 @@ private fun HomeScreenPreviewLight() {
             override suspend fun loginUser(login: LoginDTO): UserDTO? = null
             override suspend fun getUserById(userid: Int): UserDTO? = null
             override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+            override suspend fun createTask(request: com.example.lumaka.data.remote.dto.TaskCreateRequest): com.example.lumaka.data.remote.dto.TaskCreateResponse =
+                com.example.lumaka.data.remote.dto.TaskCreateResponse(taskId = 1)
+            override suspend fun getTasks(userId: Int): List<com.example.lumaka.data.remote.dto.TaskResponse> = emptyList()
+            override suspend fun deleteTask(taskId: Int) {}
+            override suspend fun updateTaskCompletion(
+                taskId: Int,
+                request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
+            ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
+                com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
-            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context),
+            taskRepository = com.example.lumaka.data.repository.TaskRepository(dummyApi)
         )
     }
     LumakaTheme {
@@ -427,10 +437,20 @@ private fun HomeScreenPreviewDark() {
             override suspend fun loginUser(login: LoginDTO): UserDTO? = null
             override suspend fun getUserById(userid: Int): UserDTO? = null
             override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+            override suspend fun createTask(request: com.example.lumaka.data.remote.dto.TaskCreateRequest): com.example.lumaka.data.remote.dto.TaskCreateResponse =
+                com.example.lumaka.data.remote.dto.TaskCreateResponse(taskId = 1)
+            override suspend fun getTasks(userId: Int): List<com.example.lumaka.data.remote.dto.TaskResponse> = emptyList()
+            override suspend fun deleteTask(taskId: Int) {}
+            override suspend fun updateTaskCompletion(
+                taskId: Int,
+                request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
+            ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
+                com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
-            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context),
+            taskRepository = com.example.lumaka.data.repository.TaskRepository(dummyApi)
         )
     }
     LumakaTheme {

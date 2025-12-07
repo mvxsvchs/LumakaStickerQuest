@@ -128,7 +128,7 @@ class BingoViewModel @Inject constructor(
 
         viewModelScope.launch {
             sessionRepository.saveUser(updatedUser)
-            pointsRepository.setPoints(updatedUser.email, newPoints)
+            pointsRepository.setPoints(updatedUser.userid, newPoints)
         }
     }
 

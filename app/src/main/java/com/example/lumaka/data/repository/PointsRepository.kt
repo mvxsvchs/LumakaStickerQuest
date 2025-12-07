@@ -17,15 +17,15 @@ class PointsRepository @Inject constructor(
     private val logTag = "PointsRepository"
     private val prefs = context.getSharedPreferences("points_prefs", Context.MODE_PRIVATE)
 
-    fun getPoints(email: String): Int {
-        if (email.isBlank()) return 0
-        return prefs.getInt(key(email), 0)
+    fun getPoints(userId: Int): Int {
+        if (userId <= 0) return 0
+        return prefs.getInt(key(userId), 0)
     }
 
-    suspend fun setPoints(email: String, points: Int) {
-        if (email.isBlank()) return
-        prefs.edit().putInt(key(email), points.coerceAtLeast(0)).apply()
-        val payload = PointsDTO(email = email, points = points.coerceAtLeast(0))
+    suspend fun setPoints(userId: Int, points: Int) {
+        if (userId <= 0) return
+        prefs.edit().putInt(key(userId), points.coerceAtLeast(0)).apply()
+        val payload = PointsDTO(userId = userId, points = points.coerceAtLeast(0))
         repeat(3) { attempt ->
             try {
                 api.updatePoints(payload)
@@ -39,5 +39,5 @@ class PointsRepository @Inject constructor(
         }
     }
 
-    private fun key(email: String) = "points_${email.lowercase()}"
+    private fun key(userId: Int) = "points_$userId"
 }
