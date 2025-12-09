@@ -5,4 +5,6 @@ data class Task(
     val title: String,
     val category: CategoryEnum,
     val completed: Boolean = false,
+    val position: Int = 0,
+    val pointsReward: Int = 0,
 )

@@ -6,10 +6,10 @@ import com.example.lumaka.domain.model.User
 fun UserDTO.toDomain(fallbackEmail: String = ""): User {
     return User(
         username = this.username,
-        userid = this.userId,
-        points = this.points,
-        stickerid = this.stickerId,
-        email = this.email ?: fallbackEmail,
-        avatarId = this.avatarId ?: 1,
+        userid = this.resolvedUserId,
+        points = this.resolvedPoints,
+        stickerid = this.resolvedStickerIds,
+        email = this.resolvedEmail ?: fallbackEmail,
+        avatarId = this.resolvedAvatarId ?: 1,
     )
 }

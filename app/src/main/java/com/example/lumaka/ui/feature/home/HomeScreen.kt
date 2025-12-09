@@ -51,7 +51,6 @@ import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lumaka.data.remote.api.QuestService
 import com.example.lumaka.data.remote.dto.LoginDTO
-import com.example.lumaka.data.remote.dto.PointsDTO
 import com.example.lumaka.data.remote.dto.RegisterDTO
 import com.example.lumaka.data.remote.dto.UserDTO
 import kotlinx.coroutines.launch
@@ -404,11 +403,25 @@ private fun HomeScreenPreviewLight() {
             override suspend fun registerUser(register: RegisterDTO) {}
             override suspend fun loginUser(login: LoginDTO): UserDTO? = null
             override suspend fun getUserById(userid: Int): UserDTO? = null
-            override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+            override suspend fun createTask(request: com.example.lumaka.data.remote.dto.TaskCreateRequest): com.example.lumaka.data.remote.dto.TaskCreateResponse =
+                com.example.lumaka.data.remote.dto.TaskCreateResponse(taskId = 1)
+            override suspend fun getTasks(userId: Int): List<com.example.lumaka.data.remote.dto.TaskResponse> = emptyList()
+            override suspend fun deleteTask(taskId: Int) {}
+            override suspend fun updateTaskCompletion(
+                taskId: Int,
+                request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
+            ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
+                com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
+            override suspend fun updateStickers(
+                userId: Int,
+                request: com.example.lumaka.data.remote.dto.UpdateStickersRequest
+            ) { }
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
-            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context),
+            taskRepository = com.example.lumaka.data.repository.TaskRepository(dummyApi),
+            userRepository = com.example.lumaka.data.repository.UserRepository(dummyApi)
         )
     }
     LumakaTheme {
@@ -426,11 +439,25 @@ private fun HomeScreenPreviewDark() {
             override suspend fun registerUser(register: RegisterDTO) {}
             override suspend fun loginUser(login: LoginDTO): UserDTO? = null
             override suspend fun getUserById(userid: Int): UserDTO? = null
-            override suspend fun updatePoints(pointsDTO: PointsDTO) {}
+            override suspend fun createTask(request: com.example.lumaka.data.remote.dto.TaskCreateRequest): com.example.lumaka.data.remote.dto.TaskCreateResponse =
+                com.example.lumaka.data.remote.dto.TaskCreateResponse(taskId = 1)
+            override suspend fun getTasks(userId: Int): List<com.example.lumaka.data.remote.dto.TaskResponse> = emptyList()
+            override suspend fun deleteTask(taskId: Int) {}
+            override suspend fun updateTaskCompletion(
+                taskId: Int,
+                request: com.example.lumaka.data.remote.dto.TaskUpdateRequest
+            ): com.example.lumaka.data.remote.dto.TaskUpdateResponse =
+                com.example.lumaka.data.remote.dto.TaskUpdateResponse(userPoints = 0)
+            override suspend fun updateStickers(
+                userId: Int,
+                request: com.example.lumaka.data.remote.dto.UpdateStickersRequest
+            ) { }
         }
         HomeViewModel(
             pointsRepository = com.example.lumaka.data.repository.PointsRepository(context, dummyApi),
-            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context)
+            sessionRepository = com.example.lumaka.data.repository.SessionRepository(context),
+            taskRepository = com.example.lumaka.data.repository.TaskRepository(dummyApi),
+            userRepository = com.example.lumaka.data.repository.UserRepository(dummyApi)
         )
     }
     LumakaTheme {

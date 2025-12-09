@@ -7,6 +7,7 @@ import com.example.lumaka.R
 import com.example.lumaka.data.repository.BingoBoardRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
+import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.session.UserSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -46,7 +47,8 @@ class BingoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
-    private val bingoBoardRepository: BingoBoardRepository
+    private val bingoBoardRepository: BingoBoardRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val stickerPool: List<Sticker> = buildList {
@@ -116,8 +118,7 @@ class BingoViewModel @Inject constructor(
             } else cell
         }
 
-        val bingoBonus = if (unlocksBingo(updatedCells)) 5 else 0
-        val newPoints = (currentUser.points - BINGO_COST + bingoBonus).coerceAtLeast(0)
+        val newPoints = (currentUser.points - BINGO_COST).coerceAtLeast(0)
         val updatedUser = currentUser.copy(
             points = newPoints,
             stickerid = currentUser.stickerid + sticker.id
@@ -128,7 +129,12 @@ class BingoViewModel @Inject constructor(
 
         viewModelScope.launch {
             sessionRepository.saveUser(updatedUser)
-            pointsRepository.setPoints(updatedUser.email, newPoints)
+            userRepository.updateStickers(updatedUser.userid, updatedUser.stickerid)
+            val refreshed = runCatching { userRepository.getUserById(updatedUser.userid) }.getOrNull()
+            if (refreshed != null) {
+                UserSession.update(refreshed)
+                sessionRepository.saveUser(refreshed)
+            }
         }
     }
 

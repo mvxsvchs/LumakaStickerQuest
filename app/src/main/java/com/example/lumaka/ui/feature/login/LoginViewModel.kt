@@ -48,12 +48,11 @@ class LoginViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     val loginResult = finalResult.data
                     val effectiveEmail = loginResult.email.ifBlank { loweredEmail }
-                    val storedPoints = pointsRepository.getPoints(effectiveEmail)
+                    val storedPoints = pointsRepository.getPoints(loginResult.userid)
                     val mergedPoints = max(loginResult.points, storedPoints)
-                    val userWithPoints = loginResult.copy(points = mergedPoints)
+                    val userWithPoints = loginResult.copy(points = mergedPoints, email = effectiveEmail)
                     UserSession.update(userWithPoints)
                     sessionRepository.saveUser(userWithPoints)
-                    pointsRepository.setPoints(effectiveEmail, mergedPoints)
                     LoginUiState(isSuccess = true)
                 }
                 is ApiResult.Error -> {

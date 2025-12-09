@@ -62,7 +62,6 @@ class RegisterViewModel @Inject constructor(
                         )
                         UserSession.update(user)
                         sessionRepository.saveUser(user)
-                        pointsRepository.setPoints(trimmedEmail, 0)
                         RegisterUiState(isSuccess = true)
                     }
                     is ApiResult.Error -> {
