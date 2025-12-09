@@ -9,6 +9,7 @@ class TaskMapperTest {
 
     @Test
     fun toDomain_mapsUnknownCategoryToAllAndKeepsFields() {
+        // Prüft, dass unbekannte Kategorien auf ALL fallen und alle Felder korrekt gemappt bleiben.
         val response = TaskResponse(
             taskId = 10,
             taskDescription = "Mystery task",

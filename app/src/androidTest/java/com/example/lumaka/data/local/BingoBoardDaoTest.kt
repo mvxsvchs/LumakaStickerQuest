@@ -30,6 +30,7 @@ class BingoBoardDaoTest {
 
     @Test
     fun upsertAndDeleteCells_respectsWeekBoundaries() = runBlocking {
+        // Testet, dass Zellen beim Wochenwechsel gelöscht und durch neue Einträge ersetzt werden.
         val email = "user@lumaka.app"
 
         dao.upsertBoard(BingoBoardEntity(email, "week-1", "sticker-a"))
