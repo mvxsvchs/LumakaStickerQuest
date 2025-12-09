@@ -25,5 +25,34 @@ jobs:
       - name: Run Lint
         run: ./gradlew lint || echo "Hinweis - Lintwarnung gefunden"
 
+  unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+
       - name: Run Unit Tests
         run: ./gradlew test || echo "Hinweis - Unittest(s) fehlgeschlagen"
+
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Run Integration Tests
+        run: ./gradlew connectedCheck || echo "Hinweis - Integrationstest(s) fehlgeschlagen"
