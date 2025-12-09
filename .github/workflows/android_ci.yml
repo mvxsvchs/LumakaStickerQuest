@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -62,4 +63,10 @@ jobs:
       - name: Assemble test APKs
         run: ./gradlew assembleDebug assembleAndroidTest
 
-      - name: Run Bin
+      - name: Run BingoBoardDaoTest on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          script: ./gradlew connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.lumaka.data.local.BingoBoardDaoTest
