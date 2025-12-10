@@ -110,7 +110,6 @@ class BingoViewModel @Inject constructor(
         }
 
         val sticker = availableStickers.random()
-
         val newPoints = (currentUser.points - BINGO_COST).coerceAtLeast(0)
         val updatedUser = currentUser.copy(
             points = newPoints,
@@ -119,10 +118,22 @@ class BingoViewModel @Inject constructor(
         UserSession.update(updatedUser)
 
         viewModelScope.launch {
-            bingoBoardRepository.fillRandomField(updatedUser.userid, sticker.id)
-            persistState(updatedUser.email)
             sessionRepository.saveUser(updatedUser)
             userRepository.updateStickers(updatedUser.userid, updatedUser.stickerid)
+            bingoBoardRepository.fillRandomField(updatedUser.userid, sticker.id)
+            val remoteBoard = runCatching { bingoBoardRepository.fetchRemoteBoard(updatedUser.userid) }.getOrNull()
+            if (remoteBoard != null) {
+                val remoteCells = cellsFromRemote(remoteBoard)
+                if (remoteCells.isNotEmpty()) {
+                    _uiState.update { current ->
+                        current.copy(
+                            cells = remoteCells,
+                            weekKey = currentWeekKey()
+                        )
+                    }
+                    persistState(updatedUser.email)
+                }
+            }
             val refreshed = runCatching { userRepository.getUserById(updatedUser.userid) }.getOrNull()
             if (refreshed != null) {
                 UserSession.update(refreshed)
