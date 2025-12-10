@@ -192,6 +192,7 @@ private fun BingoGrid(cells: List<BingoCell>) {
 @Composable
 private fun RowScope.BingoCellCard(cell: BingoCell) {
     val unlocked = cell.unlocked
+    val stickerId = remember(cell) { cell.stickerResId }
     Surface(
         modifier = Modifier
             .weight(1f)
@@ -210,17 +211,18 @@ private fun RowScope.BingoCellCard(cell: BingoCell) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
-                    text = cell.title.ifBlank {
-                        stringResource(
-                            id = R.string.bingo_cell_title,
-                            cell.id + 1
-                        )
-                    },
-                    style = MaterialTheme.typography.labelMedium,
-                    color = if (unlocked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                val stickerId = remember(cell) { cell.stickerResId }
+                if (!(unlocked && stickerId != null)) {
+                    Text(
+                        text = cell.title.ifBlank {
+                            stringResource(
+                                id = R.string.bingo_cell_title,
+                                cell.id + 1
+                            )
+                        },
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (unlocked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 AnimatedVisibility(visible = unlocked && stickerId != null) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
