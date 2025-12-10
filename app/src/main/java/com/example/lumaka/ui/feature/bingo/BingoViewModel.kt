@@ -46,7 +46,6 @@ private data class Sticker(val name: String, val resId: Int, val id: Int)
 @HiltViewModel
 class BingoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
     private val bingoBoardRepository: BingoBoardRepository,
     private val userRepository: UserRepository

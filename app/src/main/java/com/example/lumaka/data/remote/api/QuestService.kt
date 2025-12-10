@@ -53,7 +53,7 @@ interface QuestService {
     @GET(value = "board/get/{userId}")
     suspend fun getBoard(@Path(value = "userId") userId: Int): BoardDto?
 
-    @POST(value = "board/post/field/{userId}")
+    @POST(value = "board/field/{userId}")
     suspend fun fillRandomField(
         @Path(value = "userId") userId: Int,
         @Body request: StickerIdRequest

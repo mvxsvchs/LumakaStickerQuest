@@ -8,14 +8,15 @@ import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.session.UserSession
+import com.example.lumaka.domain.model.Login
 import com.example.lumaka.domain.model.Registration
-import com.example.lumaka.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.max
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -38,6 +39,7 @@ class RegisterViewModel @Inject constructor(
     fun onRegister(username: String, email: String, password: String, confirmPassword: String) {
         val trimmedUsername = username.trim()
         val trimmedEmail = email.trim()
+        val loweredEmail = trimmedEmail.lowercase()
         if (password != confirmPassword) {
             _uiState.update { it.copy(error = RegisterError.PASSWORD_MISMATCH, errorMessageId = null) }
             return
@@ -53,16 +55,30 @@ class RegisterViewModel @Inject constructor(
             _uiState.update {
                 when (result) {
                     is ApiResult.Success -> {
-                        val user = User(
-                            username = trimmedUsername,
-                            userid = 0,
-                            points = 0,
-                            stickerid = emptyList(),
-                            email = trimmedEmail,
-                        )
-                        UserSession.update(user)
-                        sessionRepository.saveUser(user)
-                        RegisterUiState(isSuccess = true)
+                        val loginResult = userRepository.loginUser(login = Login(mail = trimmedEmail, password = password))
+                        val finalLogin = if (loginResult is ApiResult.Error && trimmedEmail != loweredEmail) {
+                            userRepository.loginUser(login = Login(mail = loweredEmail, password = password))
+                        } else loginResult
+                        when (finalLogin) {
+                            is ApiResult.Success -> {
+                                val loginData = finalLogin.data
+                                val effectiveEmail = loginData.email.ifBlank { loweredEmail }
+                                val storedPoints = pointsRepository.getPoints(loginData.userid)
+                                val mergedPoints = max(loginData.points, storedPoints)
+                                val userWithPoints = loginData.copy(points = mergedPoints, email = effectiveEmail)
+                                UserSession.update(userWithPoints)
+                                sessionRepository.saveUser(userWithPoints)
+                                RegisterUiState(isSuccess = true)
+                            }
+                            is ApiResult.Error -> {
+                                val messageId = if (finalLogin.isNetworkError) {
+                                    R.string.register_error_network
+                                } else {
+                                    R.string.register_error_generic
+                                }
+                                RegisterUiState(error = RegisterError.GENERIC, errorMessageId = messageId)
+                            }
+                        }
                     }
                     is ApiResult.Error -> {
                         val messageId = when {

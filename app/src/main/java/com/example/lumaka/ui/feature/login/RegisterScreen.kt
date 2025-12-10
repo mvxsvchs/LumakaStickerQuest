@@ -49,7 +49,9 @@ fun Register(
 
     LaunchedEffect(key1 = uiState.isSuccess) {
         if (uiState.isSuccess) {
-            navController.navigate(route = AppScreens.START)
+            navController.navigate(route = AppScreens.HOME) {
+                popUpTo(AppScreens.START) { inclusive = true }
+            }
         }
     }
 
@@ -153,4 +155,3 @@ private fun RegisterViewPreviewDark() {
         Register(previewNavController)
     }
 }
-
