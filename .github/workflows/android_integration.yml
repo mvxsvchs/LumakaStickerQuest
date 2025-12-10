@@ -1,4 +1,4 @@
-name: android_ci
+name: android_integration
 
 on:
   push:
