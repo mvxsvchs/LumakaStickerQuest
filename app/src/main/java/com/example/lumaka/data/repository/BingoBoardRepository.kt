@@ -6,6 +6,7 @@ import com.example.lumaka.data.local.BingoBoardEntity
 import com.example.lumaka.data.local.BingoCellEntity
 import com.example.lumaka.data.remote.api.QuestService
 import com.example.lumaka.data.remote.dto.BoardDto
+import com.example.lumaka.data.remote.dto.StickerIdRequest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,6 +32,15 @@ class BingoBoardRepository @Inject constructor(
                 Log.w("BingoBoardRepository", "Failed to fetch remote board: ${t.message}", t)
                 null
             }
+        }
+    }
+
+    suspend fun fillRandomField(userId: Int, stickerId: Int) {
+        if (userId <= 0 || stickerId <= 0) return
+        try {
+            api.fillRandomField(userId = userId, request = StickerIdRequest(stickerId))
+        } catch (t: Throwable) {
+            Log.w("BingoBoardRepository", "Failed to fill random field: ${t.message}", t)
         }
     }
 

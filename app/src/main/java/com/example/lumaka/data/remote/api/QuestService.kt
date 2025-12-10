@@ -10,12 +10,14 @@ import com.example.lumaka.data.remote.dto.TaskUpdateRequest
 import com.example.lumaka.data.remote.dto.TaskUpdateResponse
 import com.example.lumaka.data.remote.dto.UpdateStickersRequest
 import com.example.lumaka.data.remote.dto.BoardDto
+import com.example.lumaka.data.remote.dto.StickerIdRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.Response
 
 interface QuestService {
     @POST(value = "user/register")
@@ -50,4 +52,10 @@ interface QuestService {
 
     @GET(value = "board/get/{userId}")
     suspend fun getBoard(@Path(value = "userId") userId: Int): BoardDto?
+
+    @POST(value = "board/post/field/{userId}")
+    suspend fun fillRandomField(
+        @Path(value = "userId") userId: Int,
+        @Body request: StickerIdRequest
+    ): Response<Unit>
 }
