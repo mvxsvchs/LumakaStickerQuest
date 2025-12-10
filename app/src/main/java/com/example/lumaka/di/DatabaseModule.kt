@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.lumaka.data.local.AppDatabase
 import com.example.lumaka.data.local.BingoBoardDao
 import com.example.lumaka.data.repository.BingoBoardRepository
+import com.example.lumaka.data.remote.api.QuestService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,5 +30,8 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideBingoBoardRepository(dao: BingoBoardDao): BingoBoardRepository = BingoBoardRepository(dao)
+    fun provideBingoBoardRepository(
+        dao: BingoBoardDao,
+        api: QuestService
+    ): BingoBoardRepository = BingoBoardRepository(dao, api)
 }

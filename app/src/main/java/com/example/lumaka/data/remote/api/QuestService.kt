@@ -9,6 +9,7 @@ import com.example.lumaka.data.remote.dto.TaskResponse
 import com.example.lumaka.data.remote.dto.TaskUpdateRequest
 import com.example.lumaka.data.remote.dto.TaskUpdateResponse
 import com.example.lumaka.data.remote.dto.UpdateStickersRequest
+import com.example.lumaka.data.remote.dto.BoardDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -46,4 +47,7 @@ interface QuestService {
         @Path(value = "id") userId: Int,
         @Body request: UpdateStickersRequest
     )
+
+    @GET(value = "board/get/{userId}")
+    suspend fun getBoard(@Path(value = "userId") userId: Int): BoardDto?
 }
