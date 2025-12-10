@@ -12,7 +12,7 @@
     <string name="login_username">Benutzername</string>
     <string name="login_email">Email</string>
     <string name="login_password">Passwort</string>
-    <string name="login_password_confirm">Passwort bestaetigen</string>
+    <string name="login_password_confirm">Passwort bestätigen</string>
 
     <string name="category_all">Alle</string>
     <string name="category_general">Allgemein</string>
@@ -22,10 +22,10 @@
     <string name="category_selfcare">Selbstpflege</string>
     <string name="category_gym">Sport</string>
 
-    <string name="home_add_task">Aufgabe hinzufuegen</string>
+    <string name="home_add_task">Aufgabe hinzufügen</string>
 
     <string name="login_error_invalid">Email oder Passwort ist falsch</string>
-    <string name="login_error_network">Netzwerkfehler. Bitte Verbindung pruefen und erneut versuchen.</string>
+    <string name="login_error_network">Netzwerkfehler. Bitte Verbindung prüfen und erneut versuchen.</string>
     <string name="login_error_bad_request">Der Dienst konnte die Anfrage nicht verarbeiten. Bitte später erneut versuchen.</string>
     <string name="login_error_generic">Login fehlgeschlagen. Bitte später erneut versuchen.</string>
 
@@ -39,21 +39,20 @@
     <string name="profile_points">Punkte</string>
     <string name="profile_stickers">Sticker</string>
     <string name="profile_stickers_empty">Noch keine Sticker gesammelt.</string>
-    <string name="profile_avatar_title">Avatar auswaehlen</string>
+    <string name="profile_avatar_title">Avatar auswählen</string>
     <string name="profile_avatar_option">Avatar Option %1$d</string>
     <string name="profile_avatar_current">Aktueller Avatar</string>
 
     <string name="settings_title">Einstellungen</string>
-    <string name="settings_notifications">Benachrichtigungen</string>
     <string name="settings_privacy">Datenschutz</string>
     <string name="settings_bingoboard">Bingoboard</string>
     <string name="settings_logout">Logout</string>
-    <string name="settings_privacy_body">Hier steht die Datenschutzerklaerung. Dies ist ein Platzhaltertext - bitte ersetzen Sie ihn durch eine echte Datenschutzinformation.</string>
+    <string name="settings_privacy_body">Hier steht die Datenschutzerklärung. Dies ist ein Platzhaltertext.</string>
 
     <string name="bingoboard_title">Bingoboard</string>
-    <string name="bingoboard_subtitle">Kaufe ein zufaelliges Feld fuer 10 Punkte und erhalte einen zufaelligen Sticker.</string>
-    <string name="bingoboard_action_buy">Zufaelliges Feld kaufen (-10 Punkte)</string>
-    <string name="bingoboard_points_available">Verfuegbare Punkte: %1$d</string>
+    <string name="bingoboard_subtitle">Kaufe ein zufälliges Feld fuer 10 Punkte und erhalte einen zufälligen Sticker.</string>
+    <string name="bingoboard_action_buy">Zufälliges Feld kaufen (-10 Punkte)</string>
+    <string name="bingoboard_points_available">Verfügbare Punkte: %1$d</string>
     <string name="bingoboard_not_enough_points">Du brauchst mindestens 10 Punkte.</string>
     <string name="bingoboard_locked_finished">Alle Felder sind bereits freigeschaltet.</string>
     <string name="bingoboard_reward">Sticker %1$s erhalten!</string>
@@ -70,7 +69,7 @@
     <string name="bingo_message_login_required">Bitte einloggen, um zu spielen.</string>
     <string name="bingo_message_all_collected">Alle Sticker bereits gesammelt.</string>
     <string name="bingo_message_all_unlocked">Alle Felder sind bereits freigeschaltet.</string>
-    <string name="bingo_message_not_enough_points">Nicht genug Punkte (10 noetig).</string>
+    <string name="bingo_message_not_enough_points">Nicht genug Punkte (10 nötig).</string>
     <string name="bingo_cell_title">Feld %1$d</string>
 
     <string name="home_dropdown_icon">Dropdown Icon</string>
