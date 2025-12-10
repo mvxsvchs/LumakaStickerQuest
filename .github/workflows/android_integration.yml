@@ -25,15 +25,21 @@ jobs:
       - name: Assemble test APKs
         run: ./gradlew assembleDebug assembleAndroidTest
 
+      - name: Prepare ADB
+        run: |
+          adb kill-server || true
+          adb start-server
+
       - name: Run integration tests on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 33
           target: google_apis
           arch: x86_64
           profile: pixel_6
           force-avd-creation: true
           disable-animations: true
           emulator-boot-timeout: 1200
-          emulator-options: -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim
+          disable-linux-hw-accel: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim -accel off
           script: ./gradlew connectedDebugAndroidTest
