@@ -28,8 +28,4 @@ object StickerAssets {
         }
     }
 
-    /**
-     * Reverse lookup: given a drawable resource ID, returns the sticker ID (1..29, 101..131) or null.
-     */
-    fun idForRes(resId: Int): Int? = idToResId.entries.firstOrNull { it.value == resId }?.key
 }
