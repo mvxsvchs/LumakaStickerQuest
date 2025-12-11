@@ -64,13 +64,6 @@ fun SettingsView(
             )
             Divider()
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(id = R.string.settings_notifications),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Divider()
-            Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { navController.navigate(route = AppScreens.PRIVACY) },

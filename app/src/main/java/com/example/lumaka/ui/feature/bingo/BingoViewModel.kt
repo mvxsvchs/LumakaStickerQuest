@@ -4,19 +4,20 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lumaka.R
+import com.example.lumaka.data.local.BingoCellEntity
 import com.example.lumaka.data.repository.BingoBoardRepository
 import com.example.lumaka.data.repository.PointsRepository
 import com.example.lumaka.data.repository.SessionRepository
 import com.example.lumaka.data.repository.UserRepository
 import com.example.lumaka.data.session.UserSession
+import com.example.lumaka.data.remote.dto.BoardDto
+import com.example.lumaka.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -45,7 +46,6 @@ private data class Sticker(val name: String, val resId: Int, val id: Int)
 @HiltViewModel
 class BingoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val pointsRepository: PointsRepository,
     private val sessionRepository: SessionRepository,
     private val bingoBoardRepository: BingoBoardRepository,
     private val userRepository: UserRepository
@@ -70,10 +70,8 @@ class BingoViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             UserSession.user
-                .map { it?.email?.lowercase().orEmpty() }
-                .distinctUntilChanged()
-                .collectLatest { email ->
-                loadFromStorage(email.ifBlank { null })
+                .collectLatest { user ->
+                loadBoard(user)
             }
         }
     }
@@ -110,26 +108,31 @@ class BingoViewModel @Inject constructor(
             return
         }
 
-        val chosen = lockedCells.random()
         val sticker = availableStickers.random()
-        val updatedCells = _uiState.value.cells.map { cell ->
-            if (cell.id == chosen.id) {
-                cell.copy(unlocked = true, stickerResId = sticker.resId)
-            } else cell
-        }
-
         val newPoints = (currentUser.points - BINGO_COST).coerceAtLeast(0)
         val updatedUser = currentUser.copy(
             points = newPoints,
             stickerid = currentUser.stickerid + sticker.id
         )
         UserSession.update(updatedUser)
-        _uiState.update { it.copy(cells = updatedCells, lastSticker = sticker.name, message = null) }
-        viewModelScope.launch { persistState(updatedUser.email) }
 
         viewModelScope.launch {
             sessionRepository.saveUser(updatedUser)
             userRepository.updateStickers(updatedUser.userid, updatedUser.stickerid)
+            bingoBoardRepository.fillRandomField(updatedUser.userid, sticker.id)
+            val remoteBoard = runCatching { bingoBoardRepository.fetchRemoteBoard(updatedUser.userid) }.getOrNull()
+            if (remoteBoard != null) {
+                val remoteCells = cellsFromRemote(remoteBoard)
+                if (remoteCells.isNotEmpty()) {
+                    _uiState.update { current ->
+                        current.copy(
+                            cells = remoteCells,
+                            weekKey = currentWeekKey()
+                        )
+                    }
+                    persistState(updatedUser.email)
+                }
+            }
             val refreshed = runCatching { userRepository.getUserById(updatedUser.userid) }.getOrNull()
             if (refreshed != null) {
                 UserSession.update(refreshed)
@@ -138,24 +141,36 @@ class BingoViewModel @Inject constructor(
         }
     }
 
-    private fun baseCells(): List<BingoCell> = defaultCells()
-
-    private suspend fun loadFromStorage(userEmail: String?) {
+    private suspend fun loadBoard(user: User?) {
         val currentWeek = currentWeekKey()
-        val email = userEmail?.takeIf { it.isNotBlank() }
+        val email = user?.email?.takeIf { it.isNotBlank() }
+        if (user == null) {
+            _uiState.value = BingoUiState(cells = defaultCells(), weekKey = currentWeek)
+            return
+        }
+
+        val remoteBoard = bingoBoardRepository.fetchRemoteBoard(user.userid)
+        if (remoteBoard != null) {
+            val remoteCells = cellsFromRemote(remoteBoard)
+            _uiState.value = BingoUiState(
+                cells = if (remoteCells.isNotEmpty()) remoteCells else defaultCells(),
+                lastSticker = null,
+                message = null,
+                weekKey = currentWeek
+            )
+            persistState(email)
+            return
+        }
+
         if (email == null) {
             _uiState.value = BingoUiState(cells = defaultCells(), weekKey = currentWeek)
             return
         }
+
         val snapshot = bingoBoardRepository.loadBoard(email)
         val boardWeek = snapshot.board?.weekKey
         if (boardWeek == currentWeek) {
-            val restoredCells = baseCells().map { cell ->
-                val stored = snapshot.cells.firstOrNull { it.cellId == cell.id }
-                if (stored != null) {
-                    cell.copy(unlocked = stored.unlocked, stickerResId = stored.stickerResId)
-                } else cell
-            }
+            val restoredCells = restoreCellsFromSnapshot(snapshot.cells)
             _uiState.value = BingoUiState(
                 cells = restoredCells,
                 lastSticker = snapshot.board?.lastSticker,
@@ -168,11 +183,42 @@ class BingoViewModel @Inject constructor(
         }
     }
 
+    private fun restoreCellsFromSnapshot(cells: List<BingoCellEntity>): List<BingoCell> {
+        if (cells.isEmpty()) return defaultCells()
+        return cells.sortedBy { it.cellId }.mapIndexed { index, stored ->
+            val title = context.getString(R.string.bingo_cell_title, index + 1)
+            BingoCell(
+                id = stored.cellId,
+                title = title,
+                unlocked = stored.unlocked,
+                stickerResId = stored.stickerResId
+            )
+        }
+    }
+
+    private fun cellsFromRemote(board: BoardDto): List<BingoCell> {
+        if (board.fields.isEmpty()) return emptyList()
+        return board.fields
+            .sortedBy { it.id }
+            .mapIndexed { index, field ->
+                val hasSticker = field.stickerId != null
+                val stickerRes = field.stickerId?.let { StickerAssets.resIdFor(it) }
+                val fallbackTitle = context.getString(R.string.bingo_cell_title, index + 1)
+                val title = field.name?.takeIf { it.isNotBlank() } ?: fallbackTitle
+                BingoCell(
+                    id = field.id,
+                    title = title,
+                    unlocked = hasSticker,
+                    stickerResId = stickerRes
+                )
+            }
+    }
+
     private suspend fun persistState(userEmail: String?) {
         val email = userEmail?.takeIf { it.isNotBlank() } ?: return
         val state = _uiState.value
         val cellEntities = state.cells.map {
-            com.example.lumaka.data.local.BingoCellEntity(
+            BingoCellEntity(
                 userEmail = email,
                 cellId = it.id,
                 weekKey = state.weekKey,
@@ -195,14 +241,6 @@ class BingoViewModel @Inject constructor(
             BingoCell(id = index, title = context.getString(R.string.bingo_cell_title, index + 1))
         }
 
-    private fun unlocksBingo(cells: List<BingoCell>): Boolean {
-        val grid = cells.sortedBy { it.id }.map { it.unlocked }
-        fun row(idx: Int) = grid[idx] && grid[idx + 1] && grid[idx + 2]
-        fun col(idx: Int) = grid[idx] && grid[idx + 3] && grid[idx + 6]
-        fun diag1() = grid[0] && grid[4] && grid[8]
-        fun diag2() = grid[2] && grid[4] && grid[6]
-        return row(0) || row(3) || row(6) || col(0) || col(1) || col(2) || diag1() || diag2()
-    }
 }
 
 private fun currentWeekKey(): String {

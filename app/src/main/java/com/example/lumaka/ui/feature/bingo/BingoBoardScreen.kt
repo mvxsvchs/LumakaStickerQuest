@@ -192,6 +192,7 @@ private fun BingoGrid(cells: List<BingoCell>) {
 @Composable
 private fun RowScope.BingoCellCard(cell: BingoCell) {
     val unlocked = cell.unlocked
+    val stickerId = remember(cell) { cell.stickerResId }
     Surface(
         modifier = Modifier
             .weight(1f)
@@ -210,18 +211,32 @@ private fun RowScope.BingoCellCard(cell: BingoCell) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                AnimatedVisibility(visible = unlocked && cell.stickerResId != null) {
+                if (!(unlocked && stickerId != null)) {
+                    Text(
+                        text = cell.title.ifBlank {
+                            stringResource(
+                                id = R.string.bingo_cell_title,
+                                cell.id + 1
+                            )
+                        },
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (unlocked) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                AnimatedVisibility(visible = unlocked && stickerId != null) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = cell.stickerResId!!),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(56.dp),
-                            contentScale = ContentScale.Fit
-                        )
+                        stickerId?.let {
+                            Image(
+                                painter = painterResource(id = stickerId),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(56.dp),
+                                contentScale = ContentScale.Fit
+                            )
+                        }
                     }
                 }
             }
@@ -235,11 +250,21 @@ private fun BingoPreviewLight() {
     val previewNavController = rememberPreviewNavController()
     val sampleState = BingoUiState(
         cells = listOf(
-            BingoCell(0, stringResource(id = R.string.bingo_cell_title, 1), unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(
+                0,
+                stringResource(id = R.string.bingo_cell_title, 1),
+                unlocked = true,
+                stickerResId = R.drawable.sticker_redpanda_01
+            ),
             BingoCell(1, stringResource(id = R.string.bingo_cell_title, 2)),
             BingoCell(2, stringResource(id = R.string.bingo_cell_title, 3)),
             BingoCell(3, stringResource(id = R.string.bingo_cell_title, 4)),
-            BingoCell(4, stringResource(id = R.string.bingo_cell_title, 5), unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(
+                4,
+                stringResource(id = R.string.bingo_cell_title, 5),
+                unlocked = true,
+                stickerResId = R.drawable.sticker_skzoo_01
+            ),
             BingoCell(5, stringResource(id = R.string.bingo_cell_title, 6)),
             BingoCell(6, stringResource(id = R.string.bingo_cell_title, 7)),
             BingoCell(7, stringResource(id = R.string.bingo_cell_title, 8)),
@@ -263,15 +288,30 @@ private fun BingoPreviewDark() {
     val previewNavController = rememberPreviewNavController()
     val sampleState = BingoUiState(
         cells = listOf(
-            BingoCell(0, stringResource(id = R.string.bingo_cell_title, 1), unlocked = true, stickerResId = R.drawable.sticker_redpanda_01),
+            BingoCell(
+                0,
+                stringResource(id = R.string.bingo_cell_title, 1),
+                unlocked = true,
+                stickerResId = R.drawable.sticker_redpanda_01
+            ),
             BingoCell(1, stringResource(id = R.string.bingo_cell_title, 2)),
             BingoCell(2, stringResource(id = R.string.bingo_cell_title, 3)),
             BingoCell(3, stringResource(id = R.string.bingo_cell_title, 4)),
-            BingoCell(4, stringResource(id = R.string.bingo_cell_title, 5), unlocked = true, stickerResId = R.drawable.sticker_skzoo_01),
+            BingoCell(
+                4,
+                stringResource(id = R.string.bingo_cell_title, 5),
+                unlocked = true,
+                stickerResId = R.drawable.sticker_skzoo_01
+            ),
             BingoCell(5, stringResource(id = R.string.bingo_cell_title, 6)),
             BingoCell(6, stringResource(id = R.string.bingo_cell_title, 7)),
             BingoCell(7, stringResource(id = R.string.bingo_cell_title, 8)),
-            BingoCell(8, stringResource(id = R.string.bingo_cell_title, 9), unlocked = true, stickerResId = R.drawable.sticker_skzoo_02)
+            BingoCell(
+                8,
+                stringResource(id = R.string.bingo_cell_title, 9),
+                unlocked = true,
+                stickerResId = R.drawable.sticker_skzoo_02
+            )
         )
     )
     LumakaTheme {
